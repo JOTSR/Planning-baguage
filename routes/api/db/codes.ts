@@ -19,7 +19,7 @@ export const handler: WithSessionHandlers = {
 		const link = `${endpoint}${code}`
 		const qr = await qrcode(link) as unknown as string
 
-		codesTable.create({ code, createdAt: new Date().toISOString() })
+		await codesTable.create({ code, createdAt: new Date().toISOString() })
 
 		return RespondJson({
 			data: { qr, endpoint, code, link },
