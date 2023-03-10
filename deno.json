@@ -1,0 +1,25 @@
+{
+	"fmt": {
+		"options": {
+			"useTabs": true,
+			"indentWidth": 4,
+			"semiColons": false,
+			"singleQuote": true
+		},
+		"files": {
+			"exclude": [
+				"*.gen.ts"
+			]
+		}
+	},
+	"tasks": {
+		"start": "deno run -A --watch=static/,routes/ dev.ts",
+		"deploy:dev": "deployctl deploy --project=planning-baguage ./main.ts",
+		"deploy:prod": "deployctl deploy --project=planning-baguage --prod ./main.ts"
+	},
+	"importMap": "./import_map.json",
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact"
+	}
+}
