@@ -62,7 +62,7 @@ export default function Invite(
 
 	return (
 		<Skeleton title='Inviter'>
-			<h1>Élevation de privilèges requise</h1>
+			<h1>Élévation de privilèges requise</h1>
 		</Skeleton>
 	)
 }
