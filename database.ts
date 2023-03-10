@@ -12,7 +12,8 @@ export class DbTable<T extends { uuid: UUID }> {
 
 	async readAll(): Promise<T[]> {
 		const { data, error } = await this.#supabase.from(this.#tableName)
-			.select('*')
+			.select()
+			
 		if (error) {
 			throw Error
 		}
@@ -21,7 +22,7 @@ export class DbTable<T extends { uuid: UUID }> {
 
 	async read({ uuid }: Pick<T, 'uuid'>): Promise<T> {
 		const { data, error } = await this.#supabase.from(this.#tableName)
-			.select('*').eq('uuid', uuid)
+			.select().eq('uuid', uuid)
 
 		if (error) {
 			throw Error
