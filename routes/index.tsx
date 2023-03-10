@@ -17,6 +17,17 @@ export const handler: Handlers<HandlerFormat> = {
 }
 
 export default function Home({ data }: PageProps<HandlerFormat>) {
+	if (data.outings.length === 0) {
+		return (
+			<Skeleton title='Accueil'>
+				<>
+					<h1>Sessions</h1>
+					<p>Aucune date actuellement prévue</p>
+				</>
+			</Skeleton>
+		)
+	}
+
 	return (
 		<Skeleton title='Accueil'>
 			<>
