@@ -44,6 +44,7 @@
 	"display": "fullscreen",
 	"scope": "/",
 	"theme_color": "#72ad1f",
+	"categories": ["education", "travel", "utilities"],
 	"shortcuts": [
 		{
 			"name": "Inviter un participant",
@@ -64,7 +65,7 @@
 			"url": "/?source=pwa-shortcut",
 			"icons": [
 				{
-					"src": "/assets/icons/home.svg",
+					"src": "/assets/icons/square-rounded-check.svg",
 					"sizes": "192x192"
 				}
 			]
