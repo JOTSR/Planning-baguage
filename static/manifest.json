@@ -1,6 +1,6 @@
 {
 	"short_name": "Planning baguage",
-	"name": "Planning baguage: sessions de baguage en Aquitaine avec Pascal",
+	"name": "Sessions de baguage en Aquitaine",
 	"lang": "fr",
 	"orientation": "portrait",
 	"icons": [
@@ -35,7 +35,7 @@
 	"id": "/?source=pwa",
 	"start_url": "/?source=pwa",
 	"background_color": "#dbe6cc",
-	"display": "minimal-ui",
+	"display": "fullscreen",
 	"scope": "/",
 	"theme_color": "#72ad1f",
 	"shortcuts": [
