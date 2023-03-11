@@ -1,4 +1,4 @@
-const cacheVerion = '1.1.0'
+const cacheVerion = '1.1.1'
 
 const STATIC_CACHE = `static-cache-v${cacheVerion}`
 const RUNTIME_CACHE = `runtime-cache-v${cacheVerion}`
@@ -9,11 +9,10 @@ const PRECACHE_URLS = [
 	'app.js',
 ]
 
-//TODO fix runtime cache fetch error
 const PATH_TO_CACHE = [
-	// /\/assets\//,
-	// /\/tabler-icons\//,
-	// /.*\.json/,
+	/\/assets\//,
+	/\/tabler-icons\//,
+	/.*\.json/,
 ]
 
 self.addEventListener('install', (event) => {
@@ -42,12 +41,12 @@ self.addEventListener('fetch', (event) => {
 	const url = new URL(event.request.url)
 	if (url.origin !== self.location.origin) return
 	if (!PATH_TO_CACHE.some((path) => url.pathname.match(path))) return
-	event.respondWith(async () => {
+	event.respondWith((async () => {
 		const cachedResponse = await caches.match(event.request)
 		if (cachedResponse) return cachedResponse
 		const cache = await caches.open(RUNTIME_CACHE)
 		const response = await fetch(event.request)
 		await cache.put(event.request, response.clone())
 		return response
-	})
+	})())
 })
