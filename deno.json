@@ -16,7 +16,10 @@
 		"start": "deno run -A --watch=static/,routes/ dev.ts",
 		"deploy:dev": "deployctl deploy --project=planning-baguage ./main.ts",
 		"deploy:prod": "deployctl deploy --project=planning-baguage --prod ./main.ts",
-		"release": "git checkout -b production && git merge main && git push origin main production --tags"
+		"release": "git checkout -b production && git merge main && git push origin main production --tags",
+		"bump:major": "git tag -l --sort=-creatordate | select -First 1 | %{\"$([int]$_.split('.')[0] + 1).0.0\"} | %{git tag $_} && deno task release",
+		"bump:minor": "git tag -l --sort=-creatordate | select -First 1 | %{\"$([int]$_.split('.')[0]).$([int]$_.split('.')[1] + 1).0\"} | %{git tag $_} && deno task release",
+		"bump:patch": "git tag -l --sort=-creatordate | select -First 1 | %{\"$([int]$_.split('.')[0]).$([int]$_.split('.')[1]).$([int]$_.split('.')[2] + 1)\"} | %{git tag $_} && deno task release"
 	},
 	"importMap": "./import_map.json",
 	"compilerOptions": {
