@@ -15,7 +15,8 @@
 	"tasks": {
 		"start": "deno run -A --watch=static/,routes/ dev.ts",
 		"deploy:dev": "deployctl deploy --project=planning-baguage ./main.ts",
-		"deploy:prod": "deployctl deploy --project=planning-baguage --prod ./main.ts"
+		"deploy:prod": "deployctl deploy --project=planning-baguage --prod ./main.ts",
+		"release": "git checkout -b production && git merge main && git push origin main production --tags"
 	},
 	"importMap": "./import_map.json",
 	"compilerOptions": {
