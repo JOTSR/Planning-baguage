@@ -19,6 +19,7 @@ export default function Skeleton(
 					media='(prefers-color-scheme: dark)'
 				/>
 				<link rel='stylesheet' href={asset('/style.css')} />
+				<link rel="manifest" href={asset('/manifest.json')} />
 				<link rel="shortcut icon" href={asset('/assets/icons/favicon.ico')} type="image/x-icon" />
 				<title>Planning baguage - {title}</title>
 			</Head>
