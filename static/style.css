@@ -13,7 +13,7 @@ html {
     --accent-color: hsl(85, 70%, 40%);
     accent-color: var(--accent-color);
     --bg-color: hsl(85, 34%, 85%);
-    --bg-image: url("assets/topography.svg");
+    --bg-image: url("assets/images/topography.svg");
     --ft-color: hsl(35, 70%, 15%);
     --ft-family: 'Poppins', Verdana, Geneva, Tahoma, sans-serif;
     --bg-transparency: rgba(255, 255, 255, 0.4);
