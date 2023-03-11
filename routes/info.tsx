@@ -8,7 +8,7 @@ export default function Info() {
 				<h1>Informations</h1>
 				<section>
 					<h2>Présentation</h2>
-					<p>Planning baguage v1.1.1.</p>
+					<p>Planning baguage v1.1.2.</p>
 					<h3>Contacts :</h3>
 					<ul>
 						<li>
