@@ -18,9 +18,22 @@ export default function Skeleton(
 					content='#283319'
 					media='(prefers-color-scheme: dark)'
 				/>
+				<meta
+					name='description'
+					content='Planing de baguage en Aquitaine'
+				/>
 				<link rel='stylesheet' href={asset('/style.css')} />
-				<link rel="manifest" href={asset('/manifest.json')} />
-				<link rel="shortcut icon" href={asset('/assets/icons/favicon.ico')} type="image/x-icon" />
+				<link rel='manifest' href={asset('/manifest.json')} />
+				<link
+					rel='shortcut icon'
+					href={asset('/assets/icons/favicon.ico')}
+					type='image/x-icon'
+				/>
+				<link
+					rel='apple-touch-icon'
+					href={asset('/assets/icons/logo-192.png')}
+				/>
+				<script src={asset('/app.js')} type='module' defer></script>
 				<title>Planning baguage - {title}</title>
 			</Head>
 			<body>

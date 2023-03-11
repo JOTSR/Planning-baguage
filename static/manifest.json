@@ -1,94 +1,94 @@
 {
-    "short_name": "Planning baguage",
-    "name": "Planning baguage: sessions de baguage en Aquitaine avec Pascal",
-    "lang": "fr",
-    "orientation": "portrait",
-    "icons": [
-        {
-            "src": "/assets/icons/logo.svg",
-            "type": "image/svg+xml",
-            "sizes": "512x512"
-        },
-        {
-            "src": "/assets/icons/logo-192.png",
-            "type": "image/png",
-            "sizes": "192x192"
-        },
-        {
-            "src": "/assets/icons/logo-512.png",
-            "type": "image/png",
-            "sizes": "512x512"
-        },
-        {
-            "src": "/assets/icons/logo-mono-192.png",
-            "type": "image/png",
-            "purpose": "maskable",
-            "sizes": "192x192"
-        },
-        {
-            "src": "/assets/icons/logo-mono-512.png",
-            "type": "image/png",
-            "purpose": "maskable",
-            "sizes": "512x512"
-        }
-    ],
-    "id": "/?source=pwa",
-    "start_url": "/?source=pwa",
-    "background_color": "#dbe6cc",
-    "display": "minimal-ui",
-    "scope": "/",
-    "theme_color": "#72ad1f",
-    "shortcuts": [
-        {
-            "name": "Inviter un participant",
-            "short_name": "Inviter",
-            "description": "Génerer un code d'invitation unique",
-            "url": "/invite?source=pwa-shortcut",
-            "icons": [
-                {
-                    "src": "/assets/icons/square-rounded-plus.svg",
-                    "sizes": "192x192"
-                }
-            ]
-        },
-        {
-            "name": "Prochaines sessions disponibles",
-            "short_name": "Sessions",
-            "description": "Voir les prochaines sessions disponibles",
-            "url": "/?source=pwa-shortcut",
-            "icons": [
-                {
-                    "src": "/assets/icons/home.svg",
-                    "sizes": "192x192"
-                }
-            ]
-        },
-        {
-            "name": "Mon compte",
-            "short_name": "Compte",
-            "description": "Accéder à mon compte",
-            "url": "/account?source=pwa-shortcut",
-            "icons": [
-                {
-                    "src": "/assets/icons/lock-square-rounded.svg",
-                    "sizes": "192x192"
-                }
-            ]
-        }
-    ],
-    "description": "Planning des sessions de baguage en Aquitaine avec Pascal",
-    "screenshots": [
-        {
-            "src": "/assets/images/sessions-screenshot.png",
-            "type": "image/png",
-            "sizes": "390x865",
-            "form_factor": "narrow"
-        },
-        {
-            "src": "/assets/images/invite-screenshot.png",
-            "type": "image/png",
-            "sizes": "390x865",
-            "form_factor": "narrow"
-        }
-    ]
+	"short_name": "Planning baguage",
+	"name": "Planning baguage: sessions de baguage en Aquitaine avec Pascal",
+	"lang": "fr",
+	"orientation": "portrait",
+	"icons": [
+		{
+			"src": "/assets/icons/logo.svg",
+			"type": "image/svg+xml",
+			"sizes": "512x512"
+		},
+		{
+			"src": "/assets/icons/logo-192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/assets/icons/logo-512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		},
+		{
+			"src": "/assets/icons/logo-mono-192.png",
+			"type": "image/png",
+			"purpose": "maskable",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/assets/icons/logo-mono-512.png",
+			"type": "image/png",
+			"purpose": "maskable",
+			"sizes": "512x512"
+		}
+	],
+	"id": "/?source=pwa",
+	"start_url": "/?source=pwa",
+	"background_color": "#dbe6cc",
+	"display": "minimal-ui",
+	"scope": "/",
+	"theme_color": "#72ad1f",
+	"shortcuts": [
+		{
+			"name": "Inviter un participant",
+			"short_name": "Inviter",
+			"description": "Génerer un code d'invitation unique",
+			"url": "/invite?source=pwa-shortcut",
+			"icons": [
+				{
+					"src": "/assets/icons/square-rounded-plus.svg",
+					"sizes": "192x192"
+				}
+			]
+		},
+		{
+			"name": "Prochaines sessions disponibles",
+			"short_name": "Sessions",
+			"description": "Voir les prochaines sessions disponibles",
+			"url": "/?source=pwa-shortcut",
+			"icons": [
+				{
+					"src": "/assets/icons/home.svg",
+					"sizes": "192x192"
+				}
+			]
+		},
+		{
+			"name": "Mon compte",
+			"short_name": "Compte",
+			"description": "Accéder à mon compte",
+			"url": "/account?source=pwa-shortcut",
+			"icons": [
+				{
+					"src": "/assets/icons/lock-square-rounded.svg",
+					"sizes": "192x192"
+				}
+			]
+		}
+	],
+	"description": "Planning des sessions de baguage en Aquitaine avec Pascal",
+	"screenshots": [
+		{
+			"src": "/assets/images/sessions-screenshot.png",
+			"type": "image/png",
+			"sizes": "390x865",
+			"form_factor": "narrow"
+		},
+		{
+			"src": "/assets/images/invite-screenshot.png",
+			"type": "image/png",
+			"sizes": "390x865",
+			"form_factor": "narrow"
+		}
+	]
 }

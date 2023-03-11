@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.10.0"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.10.0'
 import { UUID } from './types.ts'
 
 const { SUPABASE_KEY, SUPABASE_ENDPOINT } = Deno.env.toObject()
@@ -13,7 +13,7 @@ export class DbTable<T extends { uuid: UUID }> {
 	async readAll(): Promise<T[]> {
 		const { data, error } = await this.#supabase.from(this.#tableName)
 			.select()
-			
+
 		if (error) {
 			throw Error
 		}

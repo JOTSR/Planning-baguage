@@ -1,4 +1,5 @@
 import Skeleton from '../components/Skeleton.tsx'
+import InstallPwaButton from '../islands/InstallPwaButton.tsx'
 
 export default function Info() {
 	return (
@@ -7,7 +8,7 @@ export default function Info() {
 				<h1>Informations</h1>
 				<section>
 					<h2>Présentation</h2>
-					<p>Planning baguage v1.0.0.</p>
+					<p>Planning baguage v1.1.0.</p>
 					<h3>Contacts :</h3>
 					<ul>
 						<li>
@@ -39,6 +40,9 @@ export default function Info() {
 						2023.
 					</p>
 				</section>
+				<InstallPwaButton>
+					Installer l'application
+				</InstallPwaButton>
 			</>
 		</Skeleton>
 	)

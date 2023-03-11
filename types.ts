@@ -35,3 +35,9 @@ export interface Code {
 	code: string
 	createdAt: ISOString
 }
+
+export interface BeforeInstallPromptEvent extends Event {
+	platforms: string[]
+	userChoice: Promise<'accepted' | 'dismissed'>
+	prompt: () => Promise<BeforeInstallPromptEvent>
+}
