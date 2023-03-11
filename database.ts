@@ -1,10 +1,10 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.10.0"
 import { UUID } from './types.ts'
 
-const { SUPABASE_PWD, SUPABASE_ENDPOINT } = Deno.env.toObject()
+const { SUPABASE_KEY, SUPABASE_ENDPOINT } = Deno.env.toObject()
 
 export class DbTable<T extends { uuid: UUID }> {
-	#supabase = createClient(SUPABASE_ENDPOINT, SUPABASE_PWD)
+	#supabase = createClient(SUPABASE_ENDPOINT, SUPABASE_KEY)
 	#tableName: string
 	constructor(tableName: string) {
 		this.#tableName = tableName
