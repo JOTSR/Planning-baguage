@@ -1,4 +1,4 @@
-const cacheVersion = '1.3.0'
+const cacheVersion = '1.4.1'
 
 const STATIC_CACHE = `static-cache-v${cacheVersion}`
 const RUNTIME_CACHE = `runtime-cache-v${cacheVersion}`
