@@ -12,8 +12,9 @@ const titles = {
 export default function App(
 	{ Component }: AppProps,
 ) {
+	const component = <Component />
 	//@ts-ignore need to fix type
-    const { pathname } = (<Component />).type().props.url as URL
+	const { pathname } = component.type().props.url as URL
 	//@ts-ignore type guard by ternary
 	const title = (pathname in titles) ? titles[pathname] : '404'
 
