@@ -1,4 +1,5 @@
 import InstallPwaButton from '../islands/InstallPwaButton.tsx'
+import { appVersion } from '../static/app_version.js'
 
 export default function Info() {
 	return (
@@ -6,7 +7,7 @@ export default function Info() {
 			<h1>Informations</h1>
 			<section>
 				<h2>Présentation</h2>
-				<p>Planning baguage v1.4.1.</p>
+				<p>Planning baguage v{appVersion}.</p>
 				<h3>Contacts :</h3>
 				<ul>
 					<li>

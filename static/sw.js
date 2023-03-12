@@ -1,7 +1,7 @@
-const cacheVersion = '1.4.1'
+import { appVersion } from './app_version.js'
 
-const STATIC_CACHE = `static-cache-v${cacheVersion}`
-const RUNTIME_CACHE = `runtime-cache-v${cacheVersion}`
+const STATIC_CACHE = `static-cache-v${appVersion}`
+const RUNTIME_CACHE = `runtime-cache-v${appVersion}`
 
 const PRECACHE_URLS = [
 	'/',
