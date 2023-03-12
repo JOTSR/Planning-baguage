@@ -20,18 +20,6 @@
 			"sizes": "512x512"
 		},
 		{
-			"src": "/assets/icons/logo-mono-192.png",
-			"type": "image/png",
-			"purpose": "maskable",
-			"sizes": "192x192"
-		},
-		{
-			"src": "/assets/icons/logo-mono-512.png",
-			"type": "image/png",
-			"purpose": "maskable",
-			"sizes": "512x512"
-		},
-		{
 			"src": "/assets/icons/favicon.png",
 			"type": "image/png",
 			"purpose": "maskable",
