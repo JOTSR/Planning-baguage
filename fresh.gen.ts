@@ -3,23 +3,26 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import config from './deno.json' assert { type: 'json' }
-import * as $0 from './routes/_middleware.ts'
-import * as $1 from './routes/account.tsx'
-import * as $2 from './routes/api/claim.ts'
-import * as $3 from './routes/api/claims/handle.ts'
-import * as $4 from './routes/api/db/claims.ts'
-import * as $5 from './routes/api/db/codes.ts'
-import * as $6 from './routes/api/db/outings.ts'
-import * as $7 from './routes/api/db/users.ts'
-import * as $8 from './routes/api/login.ts'
-import * as $9 from './routes/api/logout.ts'
-import * as $10 from './routes/api/outings/add.ts'
-import * as $11 from './routes/api/outings/delete.ts'
-import * as $12 from './routes/api/outings/edit.ts'
-import * as $13 from './routes/code/[code].tsx'
-import * as $14 from './routes/index.tsx'
-import * as $15 from './routes/info.tsx'
-import * as $16 from './routes/invite.tsx'
+import * as $0 from './routes/_404.tsx'
+import * as $1 from './routes/_500.tsx'
+import * as $2 from './routes/_app.tsx'
+import * as $3 from './routes/_middleware.ts'
+import * as $4 from './routes/account.tsx'
+import * as $5 from './routes/api/claim.ts'
+import * as $6 from './routes/api/claims/handle.ts'
+import * as $7 from './routes/api/db/claims.ts'
+import * as $8 from './routes/api/db/codes.ts'
+import * as $9 from './routes/api/db/outings.ts'
+import * as $10 from './routes/api/db/users.ts'
+import * as $11 from './routes/api/login.ts'
+import * as $12 from './routes/api/logout.ts'
+import * as $13 from './routes/api/outings/add.ts'
+import * as $14 from './routes/api/outings/delete.ts'
+import * as $15 from './routes/api/outings/edit.ts'
+import * as $16 from './routes/code/[code].tsx'
+import * as $17 from './routes/index.tsx'
+import * as $18 from './routes/info.tsx'
+import * as $19 from './routes/invite.tsx'
 import * as $$0 from './islands/ActionButton.tsx'
 import * as $$1 from './islands/AddSessionDialogButton.tsx'
 import * as $$2 from './islands/ClaimDialogButton.tsx'
@@ -38,23 +41,26 @@ import * as $$14 from './islands/Toast.tsx'
 
 const manifest = {
 	routes: {
-		'./routes/_middleware.ts': $0,
-		'./routes/account.tsx': $1,
-		'./routes/api/claim.ts': $2,
-		'./routes/api/claims/handle.ts': $3,
-		'./routes/api/db/claims.ts': $4,
-		'./routes/api/db/codes.ts': $5,
-		'./routes/api/db/outings.ts': $6,
-		'./routes/api/db/users.ts': $7,
-		'./routes/api/login.ts': $8,
-		'./routes/api/logout.ts': $9,
-		'./routes/api/outings/add.ts': $10,
-		'./routes/api/outings/delete.ts': $11,
-		'./routes/api/outings/edit.ts': $12,
-		'./routes/code/[code].tsx': $13,
-		'./routes/index.tsx': $14,
-		'./routes/info.tsx': $15,
-		'./routes/invite.tsx': $16,
+		'./routes/_404.tsx': $0,
+		'./routes/_500.tsx': $1,
+		'./routes/_app.tsx': $2,
+		'./routes/_middleware.ts': $3,
+		'./routes/account.tsx': $4,
+		'./routes/api/claim.ts': $5,
+		'./routes/api/claims/handle.ts': $6,
+		'./routes/api/db/claims.ts': $7,
+		'./routes/api/db/codes.ts': $8,
+		'./routes/api/db/outings.ts': $9,
+		'./routes/api/db/users.ts': $10,
+		'./routes/api/login.ts': $11,
+		'./routes/api/logout.ts': $12,
+		'./routes/api/outings/add.ts': $13,
+		'./routes/api/outings/delete.ts': $14,
+		'./routes/api/outings/edit.ts': $15,
+		'./routes/code/[code].tsx': $16,
+		'./routes/index.tsx': $17,
+		'./routes/info.tsx': $18,
+		'./routes/invite.tsx': $19,
 	},
 	islands: {
 		'./islands/ActionButton.tsx': $$0,
