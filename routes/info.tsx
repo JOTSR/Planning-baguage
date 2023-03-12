@@ -1,5 +1,5 @@
 import InstallPwaButton from '../islands/InstallPwaButton.tsx'
-import { appVersion } from '../static/app_version.js'
+import { appVersion } from '../static/app_version.ts'
 
 export default function Info() {
 	return (
