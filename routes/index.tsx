@@ -1,5 +1,4 @@
 import { Handlers, PageProps } from '$fresh/server.ts'
-import Skeleton from '../components/Skeleton.tsx'
 import OutingsGallery from '../islands/OutingsGallery.tsx'
 import { Outing } from '../types.ts'
 import { outingsTable } from './api/db/outings.ts'
@@ -19,21 +18,17 @@ export const handler: Handlers<HandlerFormat> = {
 export default function Home({ data }: PageProps<HandlerFormat>) {
 	if (data.outings.length === 0) {
 		return (
-			<Skeleton title='Accueil'>
-				<>
-					<h1>Sessions</h1>
-					<p>Aucune date actuellement prévue</p>
-				</>
-			</Skeleton>
+			<>
+				<h1>Sessions</h1>
+				<p>Aucune date actuellement prévue</p>
+			</>
 		)
 	}
 
 	return (
-		<Skeleton title='Accueil'>
-			<>
-				<h1>Sessions</h1>
-				<OutingsGallery outings={data.outings} code={data.code} />
-			</>
-		</Skeleton>
+		<>
+			<h1>Sessions</h1>
+			<OutingsGallery outings={data.outings} code={data.code} />
+		</>
 	)
 }

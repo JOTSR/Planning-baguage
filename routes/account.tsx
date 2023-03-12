@@ -2,7 +2,6 @@ import { PageProps } from '$fresh/server.ts'
 import renderSSR from 'preact-render-to-string'
 import { Button } from '../components/Button.tsx'
 import { InputText } from '../components/InputText.tsx'
-import Skeleton from '../components/Skeleton.tsx'
 import LogoutButton from '../islands/LogoutButton.tsx'
 import Submitter from '../islands/Submitter.tsx'
 import { SessionData, WithSessionHandlers } from './api/login.ts'
@@ -36,55 +35,51 @@ export default function Account(
 ) {
 	if (data?.session.uuid !== undefined) {
 		return (
-			<Skeleton title='Compte'>
-				<>
-					<h1>
-						{`${data.session.lastname} ${data.session.firstname}`}
-					</h1>
-					<section className='grid-list'>
-						<EditSessionDialogButton outings={data.outings} />
-						<AddSessionDialogButton />
-						<ClaimDialogButton
-							claims={data.claims}
-							outings={data.outings}
-						/>
-						<LogoutButton type='primary'>Déconnection</LogoutButton>
-					</section>
-				</>
-			</Skeleton>
+			<>
+				<h1>
+					{`${data.session.lastname} ${data.session.firstname}`}
+				</h1>
+				<section className='grid-list'>
+					<EditSessionDialogButton outings={data.outings} />
+					<AddSessionDialogButton />
+					<ClaimDialogButton
+						claims={data.claims}
+						outings={data.outings}
+					/>
+					<LogoutButton type='primary'>Déconnection</LogoutButton>
+				</section>
+			</>
 		)
 	}
 
 	return (
-		<Skeleton title='Compte'>
-			<>
-				<h1>Connection</h1>
-				<Submitter
-					action='/api/login'
-					method='POST'
-					className='form-panel'
-					dangerouslySetInnerHTML={{
-						__html: renderSSR(
-							<>
-								<InputText
-									title='Mail'
-									type='email'
-									name='email'
-									required={true}
-								/>
-								<InputText
-									title='Mot de passe'
-									type='password'
-									name='password'
-									required={true}
-								/>
-								<Button type='primary'>Connection</Button>
-							</>,
-						),
-					}}
-				>
-				</Submitter>
-			</>
-		</Skeleton>
+		<>
+			<h1>Connection</h1>
+			<Submitter
+				action='/api/login'
+				method='POST'
+				className='form-panel'
+				dangerouslySetInnerHTML={{
+					__html: renderSSR(
+						<>
+							<InputText
+								title='Mail'
+								type='email'
+								name='email'
+								required={true}
+							/>
+							<InputText
+								title='Mot de passe'
+								type='password'
+								name='password'
+								required={true}
+							/>
+							<Button type='primary'>Connection</Button>
+						</>,
+					),
+				}}
+			>
+			</Submitter>
+		</>
 	)
 }

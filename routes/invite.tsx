@@ -1,5 +1,4 @@
 import { PageProps } from '$fresh/server.ts'
-import Skeleton from '../components/Skeleton.tsx'
 import { qrcode } from 'https://deno.land/x/qrcode@v2.0.0/mod.ts'
 import { SessionData, WithSessionHandlers } from './api/login.ts'
 import InviteCodeButton from '../islands/InviteCodeButton.tsx'
@@ -40,29 +39,19 @@ export default function Invite(
 	{ data }: PageProps<SessionData & HandlerFormat>,
 ) {
 	if (data.session.uuid === undefined) {
-		return (
-			<Skeleton title='Inviter'>
-				<h1>Connection requise</h1>
-			</Skeleton>
-		)
+		return <h1>Connection requise</h1>
 	}
 
 	if (['moderator', 'admin'].includes(data.session.role)) {
 		return (
-			<Skeleton title='Inviter'>
-				<>
-					<h1>Invitation</h1>
-					<InviteCodeButton>
-						Générer un code d'invitation
-					</InviteCodeButton>
-				</>
-			</Skeleton>
+			<>
+				<h1>Invitation</h1>
+				<InviteCodeButton>
+					Générer un code d'invitation
+				</InviteCodeButton>
+			</>
 		)
 	}
 
-	return (
-		<Skeleton title='Inviter'>
-			<h1>Élévation de privilèges requise</h1>
-		</Skeleton>
-	)
+	return <h1>Élévation de privilèges requise</h1>
 }

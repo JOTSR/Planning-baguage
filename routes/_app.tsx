@@ -1,10 +1,22 @@
 import { asset, Head } from '$fresh/runtime.ts'
-import { JSX } from 'preact/jsx-runtime'
-import NavIcon from './NavIcon.tsx'
+import { AppProps } from '$fresh/server.ts'
+import { Dock } from '../components/Dock.tsx'
 
-export default function Skeleton(
-	{ title, children }: { title: string; children: JSX.Element },
+const titles = {
+	'/': 'Accueil',
+	'/invite': 'Inviter',
+	'/account': 'Compte',
+	'/info': 'Info',
+}
+
+export default function App(
+	{ Component }: AppProps,
 ) {
+	//@ts-ignore need to fix type
+    const { pathname } = (<Component />).type().props.url as URL
+	//@ts-ignore type guard by ternary
+	const title = (pathname in titles) ? titles[pathname] : '404'
+
 	return (
 		<>
 			<Head>
@@ -37,33 +49,10 @@ export default function Skeleton(
 				<title>Planning baguage - {title}</title>
 			</Head>
 			<body>
-				<main>{children}</main>
-				<nav className='dock'>
-					<NavIcon
-						title='Accueil'
-						picto='home'
-						href='/'
-						currentTab={title}
-					/>
-					<NavIcon
-						title='Inviter'
-						picto='square-rounded-plus'
-						href='/invite'
-						currentTab={title}
-					/>
-					<NavIcon
-						title='Compte'
-						picto='lock-square-rounded'
-						href='/account'
-						currentTab={title}
-					/>
-					<NavIcon
-						title='Info'
-						picto='info-square-rounded'
-						href='/info'
-						currentTab={title}
-					/>
-				</nav>
+				<main>
+					<Component />
+				</main>
+				<Dock title={title} />
 			</body>
 		</>
 	)
