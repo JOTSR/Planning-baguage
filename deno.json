@@ -16,7 +16,7 @@
 		"start": "deno run -A --watch=static/,routes/ dev.ts & deno bundle --watch ./static/sw.ts ./static/sw.js",
 		"deploy:dev": "deployctl deploy --project=planning-baguage ./main.ts",
 		"deploy:prod": "deployctl deploy --project=planning-baguage --prod ./main.ts",
-		"build:serviceworker": "deno bundle --no-check ./static/sw.ts ./static/sw.js && git add ./static/sw.* && git commit -m \"fix: build service worker\"",
+		"build:serviceworker": "deno bundle --no-check ./static/sw.ts ./static/sw.js && git add ./static/sw.ts ./static/sw.js && git commit -m \"fix: build service worker\"",
 		"build:specifier": "pwsh -c \"Write-Host -NoNewLine \\\"export const appVersion = '\\\" && git tag -l --sort=-creatordate | select -First 1 | Write-Host -NoNewLine $_ && Write-Host \\\"'\\\"\" > ./static/app_version.ts && deno fmt ./static/app_version.ts && git add ./static/app_version.ts && git commit -m \"fix: update version specifier\"",
 		"release": "deno task build:specifier && deno task build:serviceworker && git checkout production && git merge main && git push origin main production --tags && git checkout main",
 		"bump:major": "pwsh -c 'git tag -l --sort=-creatordate | select -First 1 | %{\"$([int]$_.split(\".\")[0] + 1).0.0\"} | %{git tag $_}' && deno task release",
