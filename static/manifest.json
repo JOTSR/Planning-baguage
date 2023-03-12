@@ -20,7 +20,7 @@
 			"sizes": "512x512"
 		},
 		{
-			"src": "/assets/icons/favicon.png",
+			"src": "/assets/icons/logo-maskable-512.png",
 			"type": "image/png",
 			"purpose": "maskable",
 			"sizes": "512x512"
@@ -76,13 +76,13 @@
 		{
 			"src": "/assets/images/sessions-screenshot.png",
 			"type": "image/png",
-			"sizes": "390x865",
+			"sizes": "541x1200",
 			"form_factor": "narrow"
 		},
 		{
 			"src": "/assets/images/invite-screenshot.png",
 			"type": "image/png",
-			"sizes": "390x865",
+			"sizes": "541x1200",
 			"form_factor": "narrow"
 		}
 	]
