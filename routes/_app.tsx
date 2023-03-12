@@ -23,7 +23,7 @@ export default function App(
 			<Head>
 				<meta
 					name='theme-color'
-					content='#dbe6cc'
+					content='#f3f2f1'
 					media='(prefers-color-scheme: light)'
 				/>
 				<meta

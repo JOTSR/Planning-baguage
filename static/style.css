@@ -27,7 +27,7 @@ html {
     :root {
         --accent-color: #76be11;
         accent-color: var(--accent-color);
-        --bg-color: hsl(85, 34%, 15%);
+        --bg-color: #283319;
         --ft-color: hsl(35, 70%, 85%);
         --bg-transparency: rgba(0, 0, 0, 0.4);
     }
