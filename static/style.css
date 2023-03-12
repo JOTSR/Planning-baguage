@@ -80,6 +80,8 @@ body {
 
 main {
     padding: var(--padding);
+    max-height: calc(100% - 4.5rem);
+    overflow-y: scroll;
 }
 
 @media (min-width: 800px) {
