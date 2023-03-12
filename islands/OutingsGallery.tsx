@@ -11,6 +11,12 @@ export default function OutingsGallery(
 	{ outings, code }: { outings: Outing[]; code: string },
 ) {
 	const [displayed, setDisplayed] = useState(0)
+	const OneDay = 24 * 3.6e6
+	outings = outings.sort((a, b) =>
+		new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+	).filter((outing) =>
+		Date.now() < new Date(outing.startDate).getTime() + OneDay
+	)
 
 	return (
 		<>
