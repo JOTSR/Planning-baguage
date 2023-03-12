@@ -16,7 +16,7 @@
 		"start": "deno run -A --watch=static/,routes/ dev.ts",
 		"deploy:dev": "deployctl deploy --project=planning-baguage ./main.ts",
 		"deploy:prod": "deployctl deploy --project=planning-baguage --prod ./main.ts",
-		"release": "git checkout -b production && git merge main && git push origin main production --tags && git checkout main",
+		"release": "git checkout production && git merge main && git push origin main production --tags && git checkout main",
 		"bump:major": "pwsh -c 'git tag -l --sort=-creatordate | select -First 1 | %{\"$([int]$_.split(\".\")[0] + 1).0.0\"} | %{git tag $_}' && deno task release",
 		"bump:minor": "pwsh -c 'git tag -l --sort=-creatordate | select -First 1 | %{\"$([int]$_.split(\".\")[0]).$([int]$_.split(\".\")[1] + 1).0\"} | %{git tag $_}' && deno task release",
 		"bump:patch": "pwsh -c 'git tag -l --sort=-creatordate | select -First 1 | %{\"$([int]$_.split(\".\")[0]).$([int]$_.split(\".\")[1]).$([int]$_.split(\".\")[2] + 1)\"} | %{git tag $_}' && deno task release"
