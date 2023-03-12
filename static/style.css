@@ -10,9 +10,9 @@ html {
 }
 
 :root {
-    --accent-color: hsl(85, 70%, 40%);
+    --accent-color: #578e0b;
     accent-color: var(--accent-color);
-    --bg-color: hsl(85, 34%, 85%);
+    --bg-color: #f3f2f1;
     --bg-image: url("assets/images/topography.svg");
     --ft-color: hsl(35, 70%, 15%);
     --ft-family: 'Poppins', Verdana, Geneva, Tahoma, sans-serif;
@@ -25,7 +25,7 @@ html {
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --accent-color: hsl(85, 70%, 30%);
+        --accent-color: #76be11;
         accent-color: var(--accent-color);
         --bg-color: hsl(85, 34%, 15%);
         --ft-color: hsl(35, 70%, 85%);

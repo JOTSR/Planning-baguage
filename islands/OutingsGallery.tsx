@@ -23,6 +23,7 @@ export default function OutingsGallery(
 			<div className='flex-bar'>
 				<Button
 					type='primary'
+					title='Session précédente'
 					onClick={() =>
 						setDisplayed(loopValue(displayed - 1, outings.length))}
 				>
@@ -33,6 +34,7 @@ export default function OutingsGallery(
 				</span>
 				<Button
 					type='primary'
+					title='Session suivante'
 					onClick={() =>
 						setDisplayed(loopValue(displayed + 1, outings.length))}
 				>

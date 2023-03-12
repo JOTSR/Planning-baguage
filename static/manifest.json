@@ -28,10 +28,10 @@
 	],
 	"id": "/?source=pwa",
 	"start_url": "/?source=pwa",
-	"background_color": "#dbe6cc",
+	"background_color": "#f3f2f1",
 	"display": "fullscreen",
 	"scope": "/",
-	"theme_color": "#72ad1f",
+	"theme_color": "#578e0b",
 	"categories": ["education", "travel", "utilities"],
 	"shortcuts": [
 		{
