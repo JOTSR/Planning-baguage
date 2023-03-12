@@ -11,7 +11,7 @@ export const handler: Handlers<HandlerFormat> = {
 	async GET(_req, ctx) {
 		const { code } = ctx.params
 		const codes = await codesTable.readAll()
-		const validityDuration = 60 * 24 * 3.6e6
+		const validityDuration = 90 * 24 * 3.6e6
 		//Delete old codes
 		codes.forEach((code) => {
 			if (

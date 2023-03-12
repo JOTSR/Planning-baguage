@@ -26,24 +26,24 @@ export default function Info() {
 						disponible.
 					</p>
 					<p>
-						Les liens d'invitation sont valables 60 jours.
-					</p>
-				</section>
-				<section>
-					<h2>Mentions légales</h2>
-					<p>Aucune donnée personnelle n'est conservée.</p>
-					<p>
-						Tous droits réservés &copy;{' '}
-						<a href='https://julienoculi.com' target='_blank'>
-							Julien Oculi
-						</a>{' '}
-						2023.
-					</p>
-				</section>
-				<InstallPwaButton>
-					Installer l'application
-				</InstallPwaButton>
-			</>
+					Les liens d'invitation sont valables 90 jours.
+				</p>
+			</section>
+			<section>
+				<h2>Mentions légales</h2>
+				<p>Aucune donnée personnelle n'est conservée.</p>
+				<p>
+					Tous droits réservés &copy;{' '}
+					<a href='https://julienoculi.com' target='_blank'>
+						Julien Oculi
+					</a>{' '}
+					2023.
+				</p>
+			</section>
+			<InstallPwaButton>
+				Installer l'application
+			</InstallPwaButton>
+		</>
 		</Skeleton>
 	)
 }
