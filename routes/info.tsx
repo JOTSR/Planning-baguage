@@ -6,7 +6,7 @@ export default function Info() {
 			<h1>Informations</h1>
 			<section>
 				<h2>Présentation</h2>
-				<p>Planning baguage v1.2.0.</p>
+				<p>Planning baguage v1.3.0.</p>
 				<h3>Contacts :</h3>
 				<ul>
 					<li>

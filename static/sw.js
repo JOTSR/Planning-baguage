@@ -1,7 +1,7 @@
-const cacheVerion = '1.2.0'
+const cacheVersion = '1.3.0'
 
-const STATIC_CACHE = `static-cache-v${cacheVerion}`
-const RUNTIME_CACHE = `runtime-cache-v${cacheVerion}`
+const STATIC_CACHE = `static-cache-v${cacheVersion}`
+const RUNTIME_CACHE = `runtime-cache-v${cacheVersion}`
 
 const PRECACHE_URLS = [
 	'/',
