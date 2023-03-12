@@ -2,7 +2,7 @@
 // deno-lint-ignore-file
 // This code was bundled using `deno bundle` and it's not recommended to edit it manually
 
-const appVersion = '1.5.0';
+const appVersion = '1.5.2';
 const STATIC_CACHE = `static-cache-v${appVersion}`;
 const RUNTIME_CACHE = `runtime-cache-v${appVersion}`;
 const PRECACHE_URLS = [
