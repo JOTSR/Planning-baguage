@@ -13,7 +13,7 @@
 		}
 	},
 	"tasks": {
-		"start": "deno run -A --watch=static/,routes/ dev.ts & deno bundle --watch ./static/sw.ts ./static/sw.js",
+		"start": "deno run -A --watch=static/,routes/ dev.ts & deno bundle --no-check --watch ./static/sw.ts ./static/sw.js",
 		"deploy:dev": "deployctl deploy --project=planning-baguage ./main.ts",
 		"deploy:prod": "deployctl deploy --project=planning-baguage --prod ./main.ts",
 		"build:serviceworker": "deno bundle --no-check ./static/sw.ts ./static/sw.js && git add ./static/sw.ts ./static/sw.js && git commit -m \"fix: build service worker\"",
