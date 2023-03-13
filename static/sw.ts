@@ -63,3 +63,36 @@ self.addEventListener('fetch', (event) => {
 		return new Response('Ressource indisponible', { status: 503 })
 	})())
 })
+
+addEventListener('push', async (e) => {
+	const event = e as PushEvent
+	if (Notification?.permission !== 'granted') {
+		return
+	}
+
+	const { title, ...options } = event.data?.json()
+
+	await showNotification(title, options)
+})
+
+async function showNotification(
+	title: string,
+	{ icon, body, tag, actions }: NotificationOptions,
+) {
+	if (!['denied', 'granted'].includes(Notification.permission)) {
+		try {
+			await Notification.requestPermission()
+		} catch (e) {
+			return e
+		}
+	}
+
+	self.registration.showNotification(title, {
+		lang: 'fr',
+		badge: '/assets/icons/logo-maskable-512.png',
+		icon,
+		body,
+		actions,
+		tag,
+	})
+}
