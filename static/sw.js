@@ -7,8 +7,10 @@ const STATIC_CACHE = `static-cache-v${appVersion}`;
 const RUNTIME_CACHE = `runtime-cache-v${appVersion}`;
 const PRECACHE_URLS = [
     '/',
-    'styles.css',
-    'app.js'
+    '/account',
+    '/info',
+    '/invite',
+    '/style.css'
 ];
 const PATH_TO_CACHE = [
     /\/assets\//,
@@ -40,10 +42,16 @@ self.addEventListener('fetch', (event)=>{
     if (!PATH_TO_CACHE.some((path)=>url.pathname.match(path))) return;
     event.respondWith((async ()=>{
         const cachedResponse = await caches.match(event.request);
-        if (cachedResponse) return cachedResponse;
         const cache = await caches.open(RUNTIME_CACHE);
-        const response = await fetch(event.request);
-        await cache.put(event.request, response.clone());
-        return response;
+        try {
+            const response = await fetch(event.request);
+            await cache.put(event.request, response.clone());
+            return response;
+        } catch  {
+            if (cachedResponse) return cachedResponse;
+        }
+        return new Response('Ressource indisponible', {
+            status: 503
+        });
     })());
 });
