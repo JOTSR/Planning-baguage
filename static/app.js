@@ -7,14 +7,14 @@ if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.register('/sw.js', {
             scope: '/'
         });
-        const supbscription = await getOrSubscribe(registration);
+        const subscription = await getOrSubscribe(registration);
         await fetch('/api/webpush', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({
-                supbscription
+                subscription
             })
         });
     } catch (error) {
