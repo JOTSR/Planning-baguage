@@ -11,8 +11,10 @@ const RUNTIME_CACHE = `runtime-cache-v${appVersion}`
 
 const PRECACHE_URLS = [
 	'/',
-	'styles.css',
-	'app.js',
+	'/account',
+	'/info',
+	'/invite',
+	'/style.css',
 ]
 
 const PATH_TO_CACHE = [
