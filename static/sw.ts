@@ -64,8 +64,11 @@ self.addEventListener('fetch', (event) => {
 	})())
 })
 
-addEventListener('push', async (e) => {
-	const event = e as PushEvent
+self.addEventListener('notificationclick', (event) => {
+
+})
+
+self.addEventListener('push', async (event) => {
 	if (Notification?.permission !== 'granted') {
 		return
 	}
