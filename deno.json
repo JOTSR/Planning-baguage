@@ -13,12 +13,13 @@
 		}
 	},
 	"tasks": {
-		"dev:serviceworker": "deno bundle --no-check --watch ./static/sw.ts ./static/sw.js",
-		"dev:app": "deno bundle --no-check --watch ./static/app.ts ./static/app.js",
+		"dev:serviceworker": "esbuild --bundle --target='chrome100' --watch --sourcemap --format='esm' --outfile=./static/sw.js ./static/sw.ts",
+		"dev:app": "esbuild --bundle --target='chrome100' --watch --sourcemap --format='esm' --outfile=./static/app.js ./static/app.ts",
 		"start": "deno run -A --watch=static/,routes/ dev.ts & deno task dev:app & deno task dev:serviceworker",
 		"deploy:dev": "deployctl deploy --project=planning-baguage ./main.ts",
 		"deploy:prod": "deployctl deploy --project=planning-baguage --prod ./main.ts",
-		"build:serviceworker": "deno bundle --no-check ./static/sw.ts ./static/sw.js && git add ./static/sw.ts ./static/sw.js && git commit -m \"fix: build service worker\"",
+		"build:app": "esbuild --bundle --minify --target='chrome100' --format='esm' --outfile=./static/app.js ./static/app.ts && git add ./static/app.ts ./static/app.js && git commit -m \"fix: build app script\"",
+		"build:serviceworker": "esbuild --bundle --minify --target='chrome100' --format='esm' --outfile=./static/sw.js ./static/sw.ts && git add ./static/sw.ts ./static/sw.js && git commit -m \"fix: build service worker\"",
 		"build:specifier": "pwsh -c \"Write-Host -NoNewLine \\\"export const appVersion = '\\\" && git tag -l --sort=-creatordate | select -First 1 | Write-Host -NoNewLine $_ && Write-Host \\\"'\\\"\" > ./static/app_version.ts && deno fmt ./static/app_version.ts && git add ./static/app_version.ts && git commit -m \"fix: update version specifier\"",
 		"build:changelog": "auto-changelog && git add CHANGELOG.md && git commit -m 'doc: update changelog'",
 		"release": "deno task build:changelog && deno fmt CHANGELOG.md && deno task build:specifier && deno task build:serviceworker && git checkout production && git merge main && git push origin main production --tags && git checkout main",
