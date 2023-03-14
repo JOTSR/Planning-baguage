@@ -14,8 +14,9 @@ export function sendClaimRequestNotification(
 		& Pick<Outing, 'startDate'>,
 ) {
 	const name = `${lastname} ${firstname}`
-	const date = new Date(startDate).getDate().toLocaleString()
-	const time = new Date(startDate).getTime().toLocaleString()
+    const iso = new Date(startDate)
+	const date = Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' }).format(iso)
+	const time = Intl.DateTimeFormat('fr-FR', { timeStyle: 'medium' }).format(iso)
 
 	return sendNotification(subscription, {
 		title: `Nouvelle demande de ${name}`,
