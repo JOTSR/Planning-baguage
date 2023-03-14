@@ -1,10 +1,11 @@
+import { WebPushSub } from '../../push_notification.ts'
 import { RespondJson } from '../../utils.ts'
 import { WithSessionHandlers } from './login.ts'
 
 export const handler: WithSessionHandlers = {
 	async POST(req, ctx) {
 		const { subscription } = await req.json() as {
-			subscription: PushSubscription
+			subscription: WebPushSub
 		}
 		const ip = (ctx.remoteAddr as Deno.NetAddr).hostname
 
