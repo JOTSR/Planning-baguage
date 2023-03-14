@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
 
+import { WebPushAction } from '../push_notification.ts'
 import { appVersion } from './app_version.ts'
 
 //deno-lint-ignore no-var
@@ -65,7 +66,28 @@ self.addEventListener('fetch', (event) => {
 })
 
 self.addEventListener('notificationclick', (event) => {
+	const rawAction = event.action as WebPushAction['action']
+	const [category, action, payload] = rawAction.match(/(.+)_(.+)#(.+)/)!
 
+	if (category === 'claim') {
+		if (action === 'accept' || action === 'reject') {
+			self.clients.openWindow(
+				`${self.location.hostname}/api/webpush_actions/claim?uuid=${payload}&action=${action}`,
+			)
+		}
+
+		if (action === 'contact') {
+			self.clients.openWindow(`mailto:${payload}`)
+		}
+	}
+
+	if (category === 'calendar') {
+		if (action === 'add') {
+			self.clients.openWindow(
+				`${self.location.hostname}/api/webpush_actions/calendar?uuid=${payload}`,
+			)
+		}
+	}
 })
 
 self.addEventListener('push', async (event) => {

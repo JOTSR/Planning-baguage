@@ -55,8 +55,24 @@ self.addEventListener('fetch', (event)=>{
         });
     })());
 });
-addEventListener('push', async (e)=>{
-    const event = e;
+self.addEventListener('notificationclick', (event)=>{
+    const rawAction = event.action;
+    const [category, action, payload] = rawAction.match(/(.+)_(.+)#(.+)/);
+    if (category === 'claim') {
+        if (action === 'accept' || action === 'reject') {
+            self.clients.openWindow(`${self.location.hostname}/api/webpush_actions/claim?uuid=${payload}&action=${action}`);
+        }
+        if (action === 'contact') {
+            self.clients.openWindow(`mailto:${payload}`);
+        }
+    }
+    if (category === 'calendar') {
+        if (action === 'add') {
+            self.clients.openWindow(`${self.location.hostname}/api/webpush_actions/calendar?uuid=${payload}`);
+        }
+    }
+});
+self.addEventListener('push', async (event)=>{
     if (Notification?.permission !== 'granted') {
         return;
     }
