@@ -8,7 +8,15 @@
 		},
 		"files": {
 			"exclude": [
-				"*.gen.ts"
+				"*.gen.ts",
+				"*.js"
+			]
+		}
+	},
+	"lint": {
+		"files": {
+			"exclude": [
+				"*.js"
 			]
 		}
 	},
