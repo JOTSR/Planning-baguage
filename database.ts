@@ -107,14 +107,14 @@ export class RestHandler<T extends { uuid: UUID }> {
 
 			if (uuid) {
 				return RespondJson({
-					data: { claim: await this.#entriesTable.read({ uuid }) },
+					data: { entry: await this.#entriesTable.read({ uuid }) },
 					message: 'Ok',
 					status: 200,
 				})
 			}
 
 			return RespondJson({
-				data: { claims: await this.#entriesTable.readAll() },
+				data: { entries: await this.#entriesTable.readAll() },
 				message: 'Ok',
 				status: 200,
 			})
@@ -139,7 +139,7 @@ export class RestHandler<T extends { uuid: UUID }> {
 			)
 
 			return RespondJson({
-				data: { claim: await this.#entriesTable.update(patch) },
+				data: { entry: await this.#entriesTable.update(patch) },
 				message: 'Ok',
 				status: 201,
 			})
@@ -162,7 +162,7 @@ export class RestHandler<T extends { uuid: UUID }> {
 			)
 
 			return RespondJson({
-				data: { claim: await this.#entriesTable.create(entry) },
+				data: { entry: await this.#entriesTable.create(entry) },
 				message: 'Ok',
 				status: 200,
 			})
@@ -179,7 +179,7 @@ export class RestHandler<T extends { uuid: UUID }> {
 			const deleted = getPatchFromParams<T, 'uuid'>(req, 'uuid')
 
 			return RespondJson({
-				data: { claim: await this.#entriesTable.delete(deleted) },
+				data: { entry: await this.#entriesTable.delete(deleted) },
 				message: 'Ok',
 				status: 200,
 			})
