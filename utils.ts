@@ -103,9 +103,11 @@ export const apiRules = {
 	},
 }
 
+export type ApiRules = typeof apiRules
+
 export function getPatchFromParams<T, Primary extends keyof T>(
 	{ url }: Request,
-	...keys: [Primary, ...(keyof T)[]]
+	...keys: (Primary | keyof T)[]
 ): Partial<T> & Pick<T, Primary> {
 	//@ts-ignore primary ensured by args type
 	const patch: Partial<T> & Pick<T, Primary> = {}
@@ -121,7 +123,7 @@ export function getPatchFromParams<T, Primary extends keyof T>(
 
 export async function getPatchFromBody<T, Primary extends keyof T>(
 	req: Request,
-	...keys: [Primary, ...(keyof T)[]]
+	...keys: (Primary | keyof T)[]
 ): Promise<Partial<T> & Pick<T, Primary>> {
 	const json = await (async () => {
 		try {
