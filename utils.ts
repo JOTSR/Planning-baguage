@@ -79,6 +79,20 @@ export const apiRules = {
 		})
 		return this
 	},
+	requiredParams({ url }: Request, ...params: string[]) {
+		this.rules.push(() => {
+			if (
+				!params.every((param) => new URL(url).searchParams.has(param))
+			) {
+				return RespondJson({
+					data: { params },
+					message: 'Paramètre(s) d\'url manquant(s)',
+					status: 401,
+				})
+			}
+		})
+		return this
+	},
 	execute(session: Session) {
 		this.session = session
 		for (const handler of this.rules) {
@@ -87,4 +101,44 @@ export const apiRules = {
 		}
 		return Promise.resolve()
 	},
+}
+
+export function getPatchFromParams<T, Primary extends keyof T>(
+	{ url }: Request,
+	...keys: [Primary, ...(keyof T)[]]
+): Partial<T> & Pick<T, Primary> {
+	//@ts-ignore primary ensured by args type
+	const patch: Partial<T> & Pick<T, Primary> = {}
+	const params = new URL(url)
+	for (const key of keys) {
+		if (typeof key !== 'string') continue
+		const value = params.searchParams.get(key)
+		//@ts-ignore key in T
+		if (value) patch[key] = value
+	}
+	return patch
+}
+
+export async function getPatchFromBody<T, Primary extends keyof T>(
+	req: Request,
+	...keys: [Primary, ...(keyof T)[]]
+): Promise<Partial<T> & Pick<T, Primary>> {
+	const json = await (async () => {
+		try {
+			return await req.json() as Partial<T> & Pick<T, Primary>
+		} catch {
+			const formData = await req.formData()
+			return Object.fromEntries(formData.entries()) as
+				& Partial<T>
+				& Pick<T, Primary>
+		}
+	})()
+
+	for (const key of keys) {
+		if (typeof key !== 'string') continue
+		if (!(key in json)) {
+			throw new Error(`${key} is missing from ${JSON.stringify(json)}`)
+		}
+	}
+	return json
 }
