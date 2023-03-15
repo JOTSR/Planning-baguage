@@ -1,4 +1,5 @@
-import { Session } from 'fresh_session/mod.ts'
+import { WithSession } from 'fresh_session/mod.ts'
+import { HandlerContext } from 'https://deno.land/x/fresh@1.0.1/server.ts'
 import { ComponentChild, hydrate, render } from 'preact'
 import { Hash, ISOString, User } from './types.ts'
 
@@ -53,11 +54,22 @@ export function isoDateStringToLocale(isoString: ISOString): ISOString {
 }
 
 export const apiRules = {
-	session: undefined as Session | undefined,
+	get ctx() {
+		if (this._ctx === undefined) throw new Error('Incorrect context')
+		return this._ctx
+	},
+	get req() {
+		if (this._req === undefined) throw new Error('Incorrect request')
+		return this._req
+	},
+	_ctx: undefined as
+		| HandlerContext<Record<string, unknown>, WithSession>
+		| undefined,
+	_req: undefined as Request | undefined,
 	rules: [] as (() => Response | void)[],
 	logged() {
 		this.rules.push(() => {
-			if (!this.session?.has('uuid')) {
+			if (!this.ctx.state.session?.has('uuid')) {
 				return RespondJson({
 					data: {},
 					message: 'Connection requise',
@@ -69,7 +81,7 @@ export const apiRules = {
 	},
 	roles(...roles: User['role'][]) {
 		this.rules.push(() => {
-			if (!roles.includes(this.session?.get('role'))) {
+			if (!roles.includes(this.ctx.state.session?.get('role'))) {
 				return RespondJson({
 					data: {},
 					message: 'Accés non authorisé',
@@ -79,10 +91,12 @@ export const apiRules = {
 		})
 		return this
 	},
-	requiredParams({ url }: Request, ...params: string[]) {
+	requiredParams(...params: string[]) {
 		this.rules.push(() => {
 			if (
-				!params.every((param) => new URL(url).searchParams.has(param))
+				!params.every((param) =>
+					new URL(this.req.url).searchParams.has(param)
+				)
 			) {
 				return RespondJson({
 					data: { params },
@@ -93,8 +107,13 @@ export const apiRules = {
 		})
 		return this
 	},
-	execute(session: Session) {
-		this.session = session
+	execute<T extends Record<string, unknown> = never>(
+		req: Request,
+		ctx: HandlerContext<T, WithSession>,
+	) {
+		//@ts-ignore TODO retype
+		this._ctx = ctx
+		this._req = req
 		for (const handler of this.rules) {
 			const response = handler()
 			if (response instanceof Response) return Promise.reject(response)
