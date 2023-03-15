@@ -1,6 +1,7 @@
 import { HandlerContext } from '$fresh/server.ts'
 import { WithSession } from 'fresh_session/mod.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.10.0'
+import { WithSessionHandlers } from './routes/api/login.ts'
 import { UUID } from './types.ts'
 import {
 	ApiRules,
@@ -83,100 +84,92 @@ type RoutesRules = {
 	delete: ApiRules
 }
 
-export class RestHandler<T extends { uuid: UUID }> {
-	#entriesTable: DbTable<T>
-	#routesRules: RoutesRules
-	#tableKeys: (keyof T | 'uuid')[]
+export function restHandler<
+	T extends { uuid: UUID },
+	U extends Record<string, unknown> = never,
+>(
+	entriesTable: DbTable<T>,
+	routesRules: RoutesRules,
+	tableKeys: (keyof T | 'uuid')[],
+): WithSessionHandlers<U> {
+	return {
+		async GET(req: Request, ctx: HandlerContext<never, WithSession>) {
+			try {
+				await routesRules.get.execute<never>(req, ctx)
+				const uuid = new URL(req.url).searchParams.get('uuid')
+				console.log(uuid, req, ctx)
+				if (uuid) {
+					return RespondJson({
+						data: { entry: await entriesTable.read({ uuid }) },
+						message: 'Ok',
+						status: 200,
+					})
+				}
 
-	constructor(
-		entriesTable: DbTable<T>,
-		routesRules: RoutesRules,
-		tableKeys: (keyof T | 'uuid')[],
-	) {
-		this.#entriesTable = entriesTable
-		this.#routesRules = routesRules
-		this.#tableKeys = tableKeys
-	}
-
-	async GET(req: Request, ctx: HandlerContext<never, WithSession>) {
-		try {
-			await this.#routesRules.get.execute<never>(req, ctx)
-			const uuid = new URL(req.url).searchParams.get('uuid')
-
-			if (uuid) {
 				return RespondJson({
-					data: { entry: await this.#entriesTable.read({ uuid }) },
+					data: { entries: await entriesTable.readAll() },
 					message: 'Ok',
 					status: 200,
 				})
+			} catch (error) {
+				if (error instanceof Response) return error
+				return RespondJson({
+					data: { error },
+					message: 'Erreur interne',
+					status: 500,
+				})
 			}
+		},
+		async PUT(req: Request, ctx: HandlerContext<never, WithSession>) {
+			try {
+				await routesRules.put.execute<never>(req, ctx)
+				const patch = await getPatchFromBody<T, 'uuid'>(
+					req,
+					...tableKeys,
+				)
 
-			return RespondJson({
-				data: { entries: await this.#entriesTable.readAll() },
-				message: 'Ok',
-				status: 200,
-			})
-		} catch (error) {
-			if (error instanceof Response) return error
-			return RespondJson({
-				data: { error },
-				message: 'Erreur interne',
-				status: 500,
-			})
-		}
-	}
+				return RespondJson({
+					data: { entry: await entriesTable.update(patch) },
+					message: 'Ok',
+					status: 201,
+				})
+			} catch (e) {
+				return e
+			}
+		},
+		async POST(req: Request, ctx: HandlerContext<never, WithSession>) {
+			try {
+				const keys = tableKeys.filter((key) =>
+					key !== 'uuid'
+				) as (keyof T)[]
+				await routesRules.post.execute<never>(req, ctx)
+				const entry = await getPatchFromBody<T, typeof keys[number]>(
+					req,
+					...keys,
+				)
 
-	async PUT(req: Request, ctx: HandlerContext<never, WithSession>) {
-		try {
-			await this.#routesRules.put.execute<never>(req, ctx)
-			const patch = await getPatchFromBody<T, 'uuid'>(
-				req,
-				...this.#tableKeys,
-			)
+				return RespondJson({
+					data: { entry: await entriesTable.create(entry) },
+					message: 'Ok',
+					status: 200,
+				})
+			} catch (e) {
+				return e
+			}
+		},
+		async DELETE(req: Request, ctx: HandlerContext<never, WithSession>) {
+			try {
+				await routesRules.delete.execute<never>(req, ctx)
+				const deleted = getPatchFromParams<T, 'uuid'>(req, 'uuid')
 
-			return RespondJson({
-				data: { entry: await this.#entriesTable.update(patch) },
-				message: 'Ok',
-				status: 201,
-			})
-		} catch (e) {
-			return e
-		}
-	}
-
-	async POST(req: Request, ctx: HandlerContext<never, WithSession>) {
-		try {
-			const keys = this.#tableKeys.filter((key) =>
-				key !== 'uuid'
-			) as (keyof T)[]
-			await this.#routesRules.post.execute<never>(req, ctx)
-			const entry = await getPatchFromBody<T, typeof keys[number]>(
-				req,
-				...keys,
-			)
-
-			return RespondJson({
-				data: { entry: await this.#entriesTable.create(entry) },
-				message: 'Ok',
-				status: 200,
-			})
-		} catch (e) {
-			return e
-		}
-	}
-
-	async DELETE(req: Request, ctx: HandlerContext<never, WithSession>) {
-		try {
-			await this.#routesRules.delete.execute<never>(req, ctx)
-			const deleted = getPatchFromParams<T, 'uuid'>(req, 'uuid')
-
-			return RespondJson({
-				data: { entry: await this.#entriesTable.delete(deleted) },
-				message: 'Ok',
-				status: 200,
-			})
-		} catch (e) {
-			return e
-		}
+				return RespondJson({
+					data: { entry: await entriesTable.delete(deleted) },
+					message: 'Ok',
+					status: 200,
+				})
+			} catch (e) {
+				return e
+			}
+		},
 	}
 }
