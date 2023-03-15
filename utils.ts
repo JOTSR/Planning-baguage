@@ -1,5 +1,6 @@
+import { Session } from 'fresh_session/mod.ts'
 import { ComponentChild, hydrate, render } from 'preact'
-import { Hash, ISOString } from './types.ts'
+import { Hash, ISOString, User } from './types.ts'
 
 export async function hash(text: string): Promise<Hash> {
 	const digest = await crypto.subtle.digest(
@@ -49,4 +50,41 @@ export function isoDateStringToLocale(isoString: ISOString): ISOString {
 	const [day, month, year] = date.split('/')
 
 	return `${year}-${month}-${day}T${time}`
+}
+
+export const apiRules = {
+	session: undefined as Session | undefined,
+	rules: [] as (() => Response | void)[],
+	logged() {
+		this.rules.push(() => {
+			if (!this.session?.has('uuid')) {
+				return RespondJson({
+					data: {},
+					message: 'Connection requise',
+					status: 401,
+				})
+			}
+		})
+		return this
+	},
+	roles(...roles: User['role'][]) {
+		this.rules.push(() => {
+			if (!roles.includes(this.session?.get('role'))) {
+				return RespondJson({
+					data: {},
+					message: 'Accés non authorisé',
+					status: 403,
+				})
+			}
+		})
+		return this
+	},
+	execute(session: Session) {
+		this.session = session
+		for (const handler of this.rules) {
+			const response = handler()
+			if (response instanceof Response) return Promise.reject(response)
+		}
+		return Promise.resolve()
+	},
 }
