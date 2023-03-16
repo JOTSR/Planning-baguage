@@ -169,3 +169,46 @@ export async function getPatchFromBody<T, Primary extends keyof T>(
 	}
 	return json
 }
+
+export async function hashFormPassword(formData: FormData) {
+	if (formData.has('password')) {
+		formData.set('password', await hash(formData.get('password') as string))
+	}
+}
+
+export function valueFormSubmitter(
+	submitter: SubmitEvent['submitter'],
+	formData: FormData,
+) {
+	if (submitter?.getAttribute('name') !== null) {
+		const name = submitter?.getAttribute('name')!
+		const value = submitter?.getAttribute('value')!
+		formData.set(name, value)
+	}
+}
+
+export async function formOrFieldsetData(
+	event: SubmitEvent,
+): Promise<FormData> {
+	const submitter = event.submitter as HTMLInputElement | HTMLButtonElement
+	let { parentElement } = submitter
+	while (parentElement && parentElement?.tagName !== 'FORM') {
+		if (
+			parentElement?.tagName === 'FIELDSET' &&
+			parentElement.dataset.fieldsetmode === 'only'
+		) {
+			const form = document.createElement('form')
+			form.appendChild(parentElement)
+			const formData = new FormData(form)
+			await hashFormPassword(formData)
+			valueFormSubmitter(submitter, formData)
+			return formData
+		}
+		parentElement = parentElement?.parentElement
+	}
+
+	const formData = new FormData(event.target as HTMLFormElement)
+	await hashFormPassword(formData)
+	valueFormSubmitter(submitter, formData)
+	return formData
+}

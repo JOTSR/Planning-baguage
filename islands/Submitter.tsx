@@ -1,57 +1,30 @@
 import { JSX } from 'preact/jsx-runtime'
-import { appendJsx, hash } from '../utils.ts'
+import {
+	appendJsx,
+	formOrFieldsetData,
+	hashFormPassword,
+} from '../utils.ts'
 import Toast from './Toast.tsx'
 
-export async function handleSubmit(event: SubmitEvent) {
+export async function handleSubmit(
+	event: SubmitEvent,
+	{ method, reload, action, type }: SubmitterOptions,
+) {
 	event.preventDefault()
 	const form = event.target! as HTMLFormElement
 	const submitter = event.submitter as HTMLButtonElement
-	const endpoint = event.submitter?.getAttribute('action') ??
-		form.getAttribute('action')!
-	const method = form.getAttribute('method')!
-	let formData = new FormData(form)
+	const endpoint = action
+	const formData = await formOrFieldsetData(event)
 
-	if (submitter.parentElement?.tagName === 'FIELDSET') {
-		const fieldset = submitter.parentElement as HTMLFieldSetElement
-		if (fieldset.dataset.fieldsetmode === 'only') {
-			const form = document.createElement('form')
-			form.appendChild(fieldset)
-			formData = new FormData(form)
-		}
-	}
-	if (submitter.parentElement?.parentElement?.tagName === 'FIELDSET') {
-		const fieldset = submitter.parentElement
-			.parentElement as HTMLFieldSetElement
-		if (fieldset.dataset.fieldsetmode === 'only') {
-			const form = document.createElement('form')
-			form.appendChild(fieldset)
-			formData = new FormData(form)
-		}
-	}
-
-	if (formData.has('password')) {
-		formData.set('password', await hash(formData.get('password') as string))
-	}
-
-	if (submitter.getAttribute('name') !== null) {
-		const name = submitter.getAttribute('name')!
-		const value = submitter.getAttribute('value')!
-		formData.set(name, value)
-	}
+	await hashFormPassword(formData)
 
 	const response = await fetch(endpoint, {
 		body: formData,
-		method: 'POST',
+		method,
 	})
 
-	if (form.parentElement?.tagName === 'DIALOG') {
-		const dialog = form.parentElement as HTMLDialogElement
-		if (
-			submitter.parentElement?.tagName !== 'FIELDSET' &&
-			submitter.parentElement?.parentElement?.tagName !== 'FIELDSET'
-		) {
-			dialog.close()
-		}
+	if (type === 'DIALOG') {
+		(form.parentElement as HTMLDialogElement).close()
 	}
 
 	if (!response.ok) {
@@ -67,12 +40,9 @@ export async function handleSubmit(event: SubmitEvent) {
 				document.body,
 			)
 		}
-		return response
 	}
 
-	if (form.parentElement?.tagName === 'DIALOG') {
-		const dialog = form.parentElement as HTMLDialogElement
-
+	if (type === 'DIALOG') {
 		if (
 			submitter.parentElement?.tagName !== 'FIELDSET' &&
 			submitter.parentElement?.parentElement?.tagName !== 'FIELDSET'
@@ -87,22 +57,36 @@ export async function handleSubmit(event: SubmitEvent) {
 		)
 	}
 
-	if (method === 'POST') location.reload()
+	if (reload) location.reload()
 	return response
 }
 
 export default function Submitter(
-	props: JSX.HTMLAttributes<HTMLFormElement> & {
-		method: 'POST' | 'DIALOG'
-		action: string
-	},
+	{ method, type, action, reload, ...props }:
+		& JSX.HTMLAttributes<HTMLFormElement>
+		& SubmitterOptions,
 ) {
 	return (
 		<form
+			formMethod={method}
+			formAction={action}
 			{...props}
-			onSubmit={(e) => handleSubmit(e as unknown as SubmitEvent)}
+			onSubmit={(e) =>
+				handleSubmit(e as unknown as SubmitEvent, {
+					method,
+					reload,
+					action,
+					type,
+				})}
 		>
 			{props.children}
 		</form>
 	)
+}
+
+export type SubmitterOptions = {
+	type: 'DIALOG' | 'FORM'
+	method: 'POST' | 'PUT' | 'GET' | 'DELETE'
+	reload: boolean
+	action: string
 }
