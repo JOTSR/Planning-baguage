@@ -107,6 +107,16 @@ export const apiRules = {
 		})
 		return this
 	},
+	notImplemented() {
+		this.rules.push(() => {
+			return RespondJson({
+				data: {},
+				message: 'Non implémenté',
+				status: 501
+			})
+		})
+		return this
+	},
 	execute<T extends Record<string, unknown> = never>(
 		req: Request,
 		ctx: HandlerContext<T, WithSession>,
