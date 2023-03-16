@@ -78,10 +78,10 @@ export class DbTable<T extends { uuid: UUID }> {
 }
 
 type RoutesRules = {
-	get: ApiRules
-	post: ApiRules
-	put: ApiRules
-	delete: ApiRules
+	get: typeof ApiRules
+	post: typeof ApiRules
+	put: typeof ApiRules
+	delete: typeof ApiRules
 }
 
 export function restHandler<

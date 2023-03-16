@@ -53,23 +53,21 @@ export function isoDateStringToLocale(isoString: ISOString): ISOString {
 	return `${year}-${month}-${day}T${time}`
 }
 
-export const apiRules = {
-	get ctx() {
-		if (this._ctx === undefined) throw new Error('Incorrect context')
-		return this._ctx
-	},
-	get req() {
-		if (this._req === undefined) throw new Error('Incorrect request')
-		return this._req
-	},
-	_ctx: undefined as
-		| HandlerContext<Record<string, unknown>, WithSession>
-		| undefined,
-	_req: undefined as Request | undefined,
-	rules: [] as (() => Response | void)[],
-	logged() {
-		this.rules.push(() => {
-			if (!this.ctx.state.session?.has('uuid')) {
+export class ApiRules {
+	static get #ctx() {
+		if (this.#_ctx === undefined) throw new Error('Incorrect context')
+		return this.#_ctx
+	}
+	static get #req() {
+		if (this.#_req === undefined) throw new Error('Incorrect request')
+		return this.#_req
+	}
+	static #_ctx?: HandlerContext<Record<string, unknown>, WithSession>
+	static #_req?: Request
+	static #rules: (() => Response | void)[] = []
+	static logged() {
+		this.#rules.push(() => {
+			if (!this.#ctx.state.session?.has('uuid')) {
 				return RespondJson({
 					data: {},
 					message: 'Connection requise',
@@ -78,10 +76,10 @@ export const apiRules = {
 			}
 		})
 		return this
-	},
-	roles(...roles: User['role'][]) {
-		this.rules.push(() => {
-			if (!roles.includes(this.ctx.state.session?.get('role'))) {
+	}
+	static roles(...roles: User['role'][]) {
+		this.#rules.push(() => {
+			if (!roles.includes(this.#ctx.state.session?.get('role'))) {
 				return RespondJson({
 					data: {},
 					message: 'Accés non authorisé',
@@ -90,12 +88,12 @@ export const apiRules = {
 			}
 		})
 		return this
-	},
-	requiredParams(...params: string[]) {
-		this.rules.push(() => {
+	}
+	static requiredParams(...params: string[]) {
+		this.#rules.push(() => {
 			if (
 				!params.every((param) =>
-					new URL(this.req.url).searchParams.has(param)
+					new URL(this.#req.url).searchParams.has(param)
 				)
 			) {
 				return RespondJson({
@@ -106,33 +104,31 @@ export const apiRules = {
 			}
 		})
 		return this
-	},
-	notImplemented() {
-		this.rules.push(() => {
+	}
+	static notImplemented() {
+		this.#rules.push(() => {
 			return RespondJson({
 				data: {},
 				message: 'Non implémenté',
-				status: 501
+				status: 501,
 			})
 		})
 		return this
-	},
-	execute<T extends Record<string, unknown> = never>(
+	}
+	static execute<T extends Record<string, unknown> = never>(
 		req: Request,
 		ctx: HandlerContext<T, WithSession>,
 	) {
 		//@ts-ignore TODO retype
-		this._ctx = ctx
-		this._req = req
-		for (const handler of this.rules) {
+		this.#_ctx = ctx
+		this.#_req = req
+		for (const handler of this.#rules) {
 			const response = handler()
 			if (response instanceof Response) return Promise.reject(response)
 		}
 		return Promise.resolve()
-	},
+	}
 }
-
-export type ApiRules = typeof apiRules
 
 export function getPatchFromParams<T, Primary extends keyof T>(
 	{ url }: Request,
