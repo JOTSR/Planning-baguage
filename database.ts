@@ -130,7 +130,7 @@ export function restHandler<
 
 				return RespondJson({
 					data: { entry: await entriesTable.update(patch) },
-					message: 'Ok',
+					message: 'Entrée modifiée',
 					status: 201,
 				})
 			} catch (e) {
@@ -150,7 +150,7 @@ export function restHandler<
 
 				return RespondJson({
 					data: { entry: await entriesTable.create(entry) },
-					message: 'Ok',
+					message: 'Entrée crée',
 					status: 200,
 				})
 			} catch (e) {
@@ -164,7 +164,7 @@ export function restHandler<
 
 				return RespondJson({
 					data: { entry: await entriesTable.delete(deleted) },
-					message: 'Ok',
+					message: 'Entrée supprimée',
 					status: 200,
 				})
 			} catch (e) {
