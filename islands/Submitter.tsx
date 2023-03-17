@@ -8,17 +8,17 @@ import Toast from './Toast.tsx'
 
 export async function handleSubmit(
 	event: SubmitEvent,
-	{ method, reload, action, type }: SubmitterOptions,
+	{ reload, type }: Pick<SubmitterOptions, 'reload' | 'type'>,
 ) {
 	event.preventDefault()
 	const form = event.target! as HTMLFormElement
+	const { action, method } = form
 	const submitter = event.submitter as HTMLButtonElement
-	const endpoint = action
 	const formData = await formOrFieldsetData(event)
 
 	await hashFormPassword(formData)
 
-	const response = await fetch(endpoint, {
+	const response = await fetch(action, {
 		body: formData,
 		method,
 	})
@@ -62,7 +62,7 @@ export async function handleSubmit(
 }
 
 export default function Submitter(
-	{ method, type, action, reload, ...props }:
+	{ method, type, action, reload, children, ...props }:
 		& JSX.HTMLAttributes<HTMLFormElement>
 		& SubmitterOptions,
 ) {
@@ -73,13 +73,11 @@ export default function Submitter(
 			{...props}
 			onSubmit={(e) =>
 				handleSubmit(e as unknown as SubmitEvent, {
-					method,
 					reload,
-					action,
 					type,
 				})}
 		>
-			{props.children}
+			{children}
 		</form>
 	)
 }
