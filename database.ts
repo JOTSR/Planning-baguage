@@ -90,9 +90,9 @@ export function restHandler<
 	tableKeys: (keyof T | 'uuid')[],
 ): WithSessionHandlers<U> {
 	return {
-		async GET(req: Request, ctx: HandlerContext<never, WithSession>) {
+		async GET(req: Request, ctx: HandlerContext<U & SessionData, WithSession>) {
 			try {
-				await routesRules.get.execute<never>(req, ctx)
+				await routesRules.get.execute<U & SessionData>(req, ctx)
 				const uuid = new URL(req.url).searchParams.get('uuid')
 				console.log(uuid, req, ctx)
 				if (uuid) {
@@ -117,9 +117,9 @@ export function restHandler<
 				})
 			}
 		},
-		async PUT(req: Request, ctx: HandlerContext<never, WithSession>) {
+		async PUT(req: Request, ctx: HandlerContext<U & SessionData, WithSession>) {
 			try {
-				await routesRules.put.execute<never>(req, ctx)
+				await routesRules.put.execute<U & SessionData>(req, ctx)
 				const patch = await getPatchFromBody<T, 'uuid'>(
 					req,
 					...tableKeys,
@@ -134,12 +134,12 @@ export function restHandler<
 				return e
 			}
 		},
-		async POST(req: Request, ctx: HandlerContext<never, WithSession>) {
+		async POST(req: Request, ctx: HandlerContext<U & SessionData, WithSession>) {
 			try {
 				const keys = tableKeys.filter((key) =>
 					key !== 'uuid'
 				) as (keyof T)[]
-				await routesRules.post.execute<never>(req, ctx)
+				await routesRules.post.execute<U & SessionData>(req, ctx)
 				const entry = await getPatchFromBody<T, typeof keys[number]>(
 					req,
 					...keys,
@@ -154,9 +154,9 @@ export function restHandler<
 				return e
 			}
 		},
-		async DELETE(req: Request, ctx: HandlerContext<never, WithSession>) {
+		async DELETE(req: Request, ctx: HandlerContext<U & SessionData, WithSession>) {
 			try {
-				await routesRules.delete.execute<never>(req, ctx)
+				await routesRules.delete.execute<U & SessionData>(req, ctx)
 				const deleted = getPatchFromParams<T, 'uuid'>(req, 'uuid')
 
 				return RespondJson({
