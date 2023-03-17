@@ -21,7 +21,7 @@ export default function InstallPwaButton(
 			type='primary'
 			onClick={() => installPwa(setDeferredPrompt, deferredPrompt)}
 		>
-			{children}
+			<i className='ti ti-apps'></i> {children}
 		</Button>
 	)
 }
