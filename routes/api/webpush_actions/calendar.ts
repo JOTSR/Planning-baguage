@@ -10,6 +10,7 @@ export const handler: WithSessionHandlers = {
 			const uuid = url.searchParams.get('uuid') as UUID
 
 			const outing = await outingsTable.read({ uuid })
+			//TODO return an ics file
 
 			return RespondJson({
 				data: { outing },
