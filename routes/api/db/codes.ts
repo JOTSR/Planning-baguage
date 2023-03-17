@@ -6,11 +6,14 @@ import { DbTable, restHandler } from '../../../database.ts'
 export const codesTable = new DbTable<Code>('codes')
 
 export const handler = restHandler(codesTable, {
-	get: ApiRules,
-	put: ApiRules.notImplemented(),
-	post: ApiRules.notImplemented(),
-	delete: ApiRules.notImplemented(),
-}, ['uuid', 'code', 'createdAt'])
+	routesRules: {
+		get: ApiRules,
+		put: ApiRules.notImplemented(),
+		post: ApiRules.notImplemented(),
+		delete: ApiRules.notImplemented(),
+	},
+	tableKeys: ['uuid', 'code', 'createdAt'],
+})
 
 handler.POST = async function (req, _ctx) {
 	try {

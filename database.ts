@@ -1,8 +1,8 @@
 import { HandlerContext } from '$fresh/server.ts'
 import { WithSession } from 'fresh_session/mod.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.10.0'
-import { WithSessionHandlers } from './routes/api/login.ts'
-import { UUID } from './types.ts'
+import { SessionData, WithSessionHandlers } from './routes/api/login.ts'
+import { HttpMethod, UUID } from './types.ts'
 import {
 	ApiRules,
 	getPatchFromBody,
@@ -81,21 +81,46 @@ type RoutesRules = {
 	[k in Lowercase<HttpMethod>]: typeof ApiRules
 }
 
+type RoutesHooks = {
+	[k in Lowercase<HttpMethod>]?: {
+		onReceive?: HookHandler
+		onSuccess?: HookHandler
+		onError?: HookHandler
+	}
+}
+
+type HookHandler<T extends Record<string, unknown> = never> = (
+	req: Request,
+	ctx: HandlerContext<T & SessionData>,
+) => void | Promise<void>
+
 export function restHandler<
 	T extends { uuid: UUID },
 	U extends Record<string, unknown> = never,
 >(
 	entriesTable: DbTable<T>,
-	routesRules: RoutesRules,
-	tableKeys: (keyof T | 'uuid')[],
+	{
+		routesRules,
+		routesHooks,
+		tableKeys,
+	}: {
+		routesRules: RoutesRules
+		routesHooks?: RoutesHooks
+		tableKeys: (keyof T | 'uuid')[]
+	},
 ): WithSessionHandlers<U> {
 	return {
-		async GET(req: Request, ctx: HandlerContext<U & SessionData, WithSession>) {
+		async GET(
+			req: Request,
+			ctx: HandlerContext<U & SessionData, WithSession>,
+		) {
 			try {
+				await routesHooks?.get?.onReceive?.(req, ctx)
 				await routesRules.get.execute<U & SessionData>(req, ctx)
 				const uuid = new URL(req.url).searchParams.get('uuid')
-				console.log(uuid, req, ctx)
+
 				if (uuid) {
+					await routesHooks?.get?.onSuccess?.(req, ctx)
 					return RespondJson({
 						data: { entry: await entriesTable.read({ uuid }) },
 						message: 'Ok',
@@ -103,12 +128,14 @@ export function restHandler<
 					})
 				}
 
+				await routesHooks?.get?.onSuccess?.(req, ctx)
 				return RespondJson({
 					data: { entries: await entriesTable.readAll() },
 					message: 'Ok',
 					status: 200,
 				})
 			} catch (error) {
+				await routesHooks?.get?.onError?.(req, ctx)
 				if (error instanceof Response) return error
 				return RespondJson({
 					data: { error },
@@ -117,25 +144,35 @@ export function restHandler<
 				})
 			}
 		},
-		async PUT(req: Request, ctx: HandlerContext<U & SessionData, WithSession>) {
+		async PUT(
+			req: Request,
+			ctx: HandlerContext<U & SessionData, WithSession>,
+		) {
 			try {
+				await routesHooks?.get?.onReceive?.(req, ctx)
 				await routesRules.put.execute<U & SessionData>(req, ctx)
 				const patch = await getPatchFromBody<T, 'uuid'>(
 					req,
 					...tableKeys,
 				)
 
+				await routesHooks?.get?.onSuccess?.(req, ctx)
 				return RespondJson({
 					data: { entry: await entriesTable.update(patch) },
 					message: 'Entrée modifiée',
 					status: 201,
 				})
 			} catch (e) {
+				await routesHooks?.get?.onError?.(req, ctx)
 				return e
 			}
 		},
-		async POST(req: Request, ctx: HandlerContext<U & SessionData, WithSession>) {
+		async POST(
+			req: Request,
+			ctx: HandlerContext<U & SessionData, WithSession>,
+		) {
 			try {
+				await routesHooks?.get?.onReceive?.(req, ctx)
 				const keys = tableKeys.filter((key) =>
 					key !== 'uuid'
 				) as (keyof T)[]
@@ -145,26 +182,34 @@ export function restHandler<
 					...keys,
 				)
 
+				await routesHooks?.get?.onSuccess?.(req, ctx)
 				return RespondJson({
 					data: { entry: await entriesTable.create(entry) },
 					message: 'Entrée crée',
 					status: 200,
 				})
 			} catch (e) {
+				await routesHooks?.get?.onError?.(req, ctx)
 				return e
 			}
 		},
-		async DELETE(req: Request, ctx: HandlerContext<U & SessionData, WithSession>) {
+		async DELETE(
+			req: Request,
+			ctx: HandlerContext<U & SessionData, WithSession>,
+		) {
 			try {
+				await routesHooks?.get?.onReceive?.(req, ctx)
 				await routesRules.delete.execute<U & SessionData>(req, ctx)
 				const deleted = getPatchFromParams<T, 'uuid'>(req, 'uuid')
 
+				await routesHooks?.get?.onSuccess?.(req, ctx)
 				return RespondJson({
 					data: { entry: await entriesTable.delete(deleted) },
 					message: 'Entrée supprimée',
 					status: 200,
 				})
 			} catch (e) {
+				await routesHooks?.get?.onError?.(req, ctx)
 				return e
 			}
 		},

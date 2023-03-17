@@ -5,10 +5,13 @@ import { ApiRules } from '../../../utils.ts'
 export const outingsTable = new DbTable<Outing>('outings')
 
 export const handler = restHandler(outingsTable, {
-	get: ApiRules,
-	put: ApiRules.logged().roles('admin', 'moderator'),
-	post: ApiRules.logged().roles('admin', 'moderator'),
-	delete: ApiRules.logged().roles('admin', 'moderator').requiredParams(
-		'uuid',
-	),
-}, ['uuid', 'location', 'description', 'startDate'])
+	routesRules: {
+		get: ApiRules,
+		put: ApiRules.logged().roles('admin', 'moderator'),
+		post: ApiRules.logged().roles('admin', 'moderator'),
+		delete: ApiRules.logged().roles('admin', 'moderator').requiredParams(
+			'uuid',
+		),
+	},
+	tableKeys: ['uuid', 'location', 'description', 'startDate'],
+})

@@ -5,10 +5,13 @@ import { ApiRules } from '../../../utils.ts'
 export const claimsTable = new DbTable<Claim>('claims')
 
 export const handler = restHandler(claimsTable, {
-	get: ApiRules.logged().roles('admin', 'moderator'),
-	put: ApiRules.logged().roles('admin', 'moderator'),
-	post: ApiRules.logged().roles('admin', 'moderator'),
-	delete: ApiRules.logged().roles('admin', 'moderator').requiredParams(
-		'uuid',
-	),
-}, ['uuid', 'email', 'lastname', 'firstname', 'outing', 'status'])
+	routesRules: {
+		get: ApiRules.logged().roles('admin', 'moderator'),
+		put: ApiRules.logged().roles('admin', 'moderator'),
+		post: ApiRules.logged().roles('admin', 'moderator'),
+		delete: ApiRules.logged().roles('admin', 'moderator').requiredParams(
+			'uuid',
+		),
+	},
+	tableKeys: ['uuid', 'email', 'lastname', 'firstname', 'outing', 'status'],
+})
