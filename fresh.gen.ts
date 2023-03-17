@@ -16,16 +16,13 @@ import * as $9 from './routes/api/db/outings.ts'
 import * as $10 from './routes/api/db/users.ts'
 import * as $11 from './routes/api/login.ts'
 import * as $12 from './routes/api/logout.ts'
-import * as $13 from './routes/api/outings/add.ts'
-import * as $14 from './routes/api/outings/delete.ts'
-import * as $15 from './routes/api/outings/edit.ts'
-import * as $16 from './routes/api/webpush.ts'
-import * as $17 from './routes/api/webpush_actions/calendar.ts'
-import * as $18 from './routes/api/webpush_actions/claim.ts'
-import * as $19 from './routes/code/[code].tsx'
-import * as $20 from './routes/index.tsx'
-import * as $21 from './routes/info.tsx'
-import * as $22 from './routes/invite.tsx'
+import * as $13 from './routes/api/webpush.ts'
+import * as $14 from './routes/api/webpush_actions/calendar.ts'
+import * as $15 from './routes/api/webpush_actions/claim.ts'
+import * as $16 from './routes/code/[code].tsx'
+import * as $17 from './routes/index.tsx'
+import * as $18 from './routes/info.tsx'
+import * as $19 from './routes/invite.tsx'
 import * as $$0 from './islands/ActionButton.tsx'
 import * as $$1 from './islands/AddSessionDialogButton.tsx'
 import * as $$2 from './islands/ClaimDialogButton.tsx'
@@ -57,16 +54,13 @@ const manifest = {
 		'./routes/api/db/users.ts': $10,
 		'./routes/api/login.ts': $11,
 		'./routes/api/logout.ts': $12,
-		'./routes/api/outings/add.ts': $13,
-		'./routes/api/outings/delete.ts': $14,
-		'./routes/api/outings/edit.ts': $15,
-		'./routes/api/webpush.ts': $16,
-		'./routes/api/webpush_actions/calendar.ts': $17,
-		'./routes/api/webpush_actions/claim.ts': $18,
-		'./routes/code/[code].tsx': $19,
-		'./routes/index.tsx': $20,
-		'./routes/info.tsx': $21,
-		'./routes/invite.tsx': $22,
+		'./routes/api/webpush.ts': $13,
+		'./routes/api/webpush_actions/calendar.ts': $14,
+		'./routes/api/webpush_actions/claim.ts': $15,
+		'./routes/code/[code].tsx': $16,
+		'./routes/index.tsx': $17,
+		'./routes/info.tsx': $18,
+		'./routes/invite.tsx': $19,
 	},
 	islands: {
 		'./islands/ActionButton.tsx': $$0,

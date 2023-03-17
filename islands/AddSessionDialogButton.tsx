@@ -12,7 +12,7 @@ export default function AddSessionDialogButton() {
 		<>
 			<InputText
 				title='Date de la session'
-				name='outing-date-local'
+				name='startDateLocal'
 				type='datetime-local'
 				required={true}
 				onInput={(e) => {
@@ -23,16 +23,16 @@ export default function AddSessionDialogButton() {
 					hidden.value = new Date(input.value).toISOString()
 				}}
 			/>
-			<input id={idOutingStart} type='hidden' name='outing-date' />
+			<input id={idOutingStart} type='hidden' name='startDate' />
 			<InputText
 				title='Lieux'
-				name='outing-location'
+				name='location'
 				type='text'
 				required={true}
 			/>
 			<InputText
 				title='Notes'
-				name='outing-description'
+				name='description'
 				type='text'
 				required={false}
 			/>
@@ -47,7 +47,8 @@ export default function AddSessionDialogButton() {
 	const dialog = (
 		<DialogSubmitter
 			title='Ajouter une session'
-			action='/api/outings/add'
+			action='/api/db/outings'
+			method='POST'
 			id={id}
 		>
 			{body}

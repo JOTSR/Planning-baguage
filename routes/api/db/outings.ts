@@ -1,16 +1,14 @@
-import { DbTable } from '../../../database.ts'
+import { DbTable, restHandler } from '../../../database.ts'
 import { Outing } from '../../../types.ts'
-import { RespondJson } from '../../../utils.ts'
-import { WithSessionHandlers } from '../login.ts'
-
-export const handler: WithSessionHandlers = {
-	async GET(_req, _ctx) {
-		return RespondJson({
-			data: { outings: await outingsTable.readAll() },
-			message: 'Ok',
-			status: 200,
-		})
-	},
-}
+import { ApiRules } from '../../../utils.ts'
 
 export const outingsTable = new DbTable<Outing>('outings')
+
+export const handler = restHandler(outingsTable, {
+	get: ApiRules,
+	put: ApiRules.logged().roles('admin', 'moderator'),
+	post: ApiRules.logged().roles('admin', 'moderator'),
+	delete: ApiRules.logged().roles('admin', 'moderator').requiredParams(
+		'uuid',
+	),
+}, ['uuid', 'location', 'description', 'startDate'])

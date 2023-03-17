@@ -1,4 +1,5 @@
 import { IS_BROWSER } from '$fresh/runtime.ts'
+import { useState } from 'https://esm.sh/v107/preact@10.11.0/hooks/src/index'
 import { Button } from '../components/Button.tsx'
 import { InputText } from '../components/InputText.tsx'
 import { Outing } from '../types.ts'
@@ -15,15 +16,17 @@ export default function EditSessionDialogButton(
 	const idOutingLocation = crypto.randomUUID()
 	const id = crypto.randomUUID()
 
+	const [uuid, setUuid] = useState('')
+
 	const body = (
 		<>
 			<label className='form-input'>
 				<span className='form-input-label'>Sessions</span>
 				<select
 					className='form-input-field'
-					name='outing-uuid'
+					name='uuid'
 					onChange={(e) => {
-						const uuid = (e.target as HTMLSelectElement).value
+						setUuid((e.target as HTMLSelectElement).value)
 						const outing = outings.find((outing) =>
 							outing.uuid === uuid
 						)!
@@ -54,7 +57,7 @@ export default function EditSessionDialogButton(
 			<InputText
 				id={idOutingDate}
 				title='Date de la sortie'
-				name='outing-date-local'
+				name='startDatelocal'
 				type='datetime-local'
 				required={true}
 				onInput={(e) => {
@@ -65,18 +68,18 @@ export default function EditSessionDialogButton(
 					hidden.value = new Date(input.value).toISOString()
 				}}
 			/>
-			<input id={idOutingStart} type='hidden' name='outing-date' />
+			<input id={idOutingStart} type='hidden' name='startDate' />
 			<InputText
 				id={idOutingLocation}
 				title='Lieux'
-				name='outing-location'
+				name='location'
 				type='text'
 				required={true}
 			/>
 			<InputText
 				id={idOutingDesc}
 				title='Notes'
-				name='outing-description'
+				name='description'
 				type='text'
 				required={false}
 			/>
@@ -84,11 +87,11 @@ export default function EditSessionDialogButton(
 				<Button type='primary'>Valider</Button>
 				<Button
 					type='secondary'
-					action='/api/outings/delete'
+					action={`/api/db/outings?uuid=${uuid}`}
+					method='DELETE'
 					onClick={(e) => {
 						const response = confirm('Supprimer la sortie ?')
 						if (!response) e.preventDefault()
-						// ;(document.getElementById(id) as HTMLFormElement).action = (e.target as HTMLFormElement).action
 					}}
 				>
 					Supprimer
@@ -100,7 +103,8 @@ export default function EditSessionDialogButton(
 	const dialog = (
 		<DialogSubmitter
 			title='Modifier une session'
-			action='/api/outings/edit'
+			action='/api/db/outings'
+			method='PUT'
 			id={id}
 		>
 			{body}
