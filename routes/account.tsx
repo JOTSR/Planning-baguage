@@ -58,6 +58,8 @@ export default function Account(
 			<Submitter
 				action='/api/login'
 				method='POST'
+				type='FORM'
+				reload={true}
 				className='form-panel'
 				dangerouslySetInnerHTML={{
 					__html: renderSSR(
