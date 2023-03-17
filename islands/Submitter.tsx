@@ -1,9 +1,5 @@
 import { JSX } from 'preact/jsx-runtime'
-import {
-	appendJsx,
-	formOrFieldsetData,
-	hashFormPassword,
-} from '../utils.ts'
+import { appendJsx, formOrFieldsetData, hashFormPassword } from '../utils.ts'
 import Toast from './Toast.tsx'
 
 export async function handleSubmit(
@@ -24,7 +20,8 @@ export async function handleSubmit(
 	})
 
 	if (type === 'DIALOG') {
-		(form.parentElement as HTMLDialogElement).close()
+		const dialog = form.parentElement as HTMLDialogElement
+		dialog.close()
 	}
 
 	if (!response.ok) {
