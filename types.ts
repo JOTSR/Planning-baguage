@@ -41,3 +41,5 @@ export interface BeforeInstallPromptEvent extends Event {
 	userChoice: Promise<'accepted' | 'dismissed'>
 	prompt: () => Promise<BeforeInstallPromptEvent>
 }
+
+export type HttpMethod = 'POST' | 'GET' | 'DELETE' | 'PUT'
