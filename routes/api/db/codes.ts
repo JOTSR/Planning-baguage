@@ -1,18 +1,19 @@
 import { Code } from '../../../types.ts'
-import { RespondJson } from '../../../utils.ts'
-import { WithSessionHandlers } from '../login.ts'
+import { ApiRules, RespondJson } from '../../../utils.ts'
 import { qrcode } from 'https://deno.land/x/qrcode@v2.0.0/mod.ts'
-import { DbTable } from '../../../database.ts'
+import { DbTable, restHandler } from '../../../database.ts'
 
-export const handler: WithSessionHandlers = {
-	async GET(_req, _ctx) {
-		return RespondJson({
-			data: { codes: await codesTable.readAll() },
-			message: 'Ok',
-			status: 200,
-		})
-	},
-	async POST(req, _ctx) {
+export const codesTable = new DbTable<Code>('codes')
+
+export const handler = restHandler(codesTable, {
+	get: ApiRules,
+	put: ApiRules.notImplemented(),
+	post: ApiRules.notImplemented(),
+	delete: ApiRules.notImplemented(),
+}, ['uuid', 'code', 'createdAt'])
+
+handler.POST = async function (req, _ctx) {
+	try {
 		const { origin } = new URL(req.url)
 		const code = Date.now().toString(16).toUpperCase().slice(5)
 		const endpoint = `${origin}/code/`
@@ -26,7 +27,12 @@ export const handler: WithSessionHandlers = {
 			message: 'Ok',
 			status: 200,
 		})
-	},
+	} catch (error) {
+		if (error instanceof Response) return error
+		return RespondJson({
+			data: { error },
+			message: 'Erreur interne',
+			status: 500,
+		})
+	}
 }
-
-export const codesTable = new DbTable<Code>('codes')
