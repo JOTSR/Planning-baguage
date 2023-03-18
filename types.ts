@@ -4,6 +4,7 @@ export type UUID = string
 export type Email = string
 export type Hash = string
 export type ISOString = string
+export type IP = string
 
 export interface User {
 	uuid: UUID
@@ -34,6 +35,14 @@ export interface Code {
 	uuid: UUID
 	code: string
 	createdAt: ISOString
+}
+
+export interface Subscription {
+	uuid: UUID
+	ip: IP
+	linkType: 'claim' | 'user'
+	linkedTo: UUID
+	webPushSub: WebPushSub
 }
 
 export interface BeforeInstallPromptEvent extends Event {
