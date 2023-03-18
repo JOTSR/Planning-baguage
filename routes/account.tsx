@@ -1,9 +1,5 @@
 import { PageProps } from '$fresh/server.ts'
-import renderSSR from 'preact-render-to-string'
-import { Button } from '../components/Button.tsx'
-import { InputText } from '../components/InputText.tsx'
 import LogoutButton from '../islands/LogoutButton.tsx'
-import Submitter from '../islands/Submitter.tsx'
 import { SessionData, WithSessionHandlers } from './api/login.ts'
 import { Claim, Outing } from '../types.ts'
 import { claimsTable } from './api/db/claims.ts'
@@ -11,6 +7,7 @@ import { outingsTable } from './api/db/outings.ts'
 import ClaimDialogButton from '../islands/ClaimDialogButton.tsx'
 import AddSessionDialogButton from '../islands/AddSessionDialogButton.tsx'
 import EditSessionDialogButton from '../islands/EditSessionDialogButton.tsx'
+import LoginSubmitter from '../islands/LoginSubmitter.tsx'
 
 type HandlerFormat = { claims: Claim[]; outings: Outing[] }
 
@@ -55,33 +52,7 @@ export default function Account(
 	return (
 		<>
 			<h1>Connection</h1>
-			<Submitter
-				action='/api/login'
-				method='POST'
-				type='FORM'
-				reload={true}
-				className='form-panel'
-				dangerouslySetInnerHTML={{
-					__html: renderSSR(
-						<>
-							<InputText
-								title='Mail'
-								type='email'
-								name='email'
-								required={true}
-							/>
-							<InputText
-								title='Mot de passe'
-								type='password'
-								name='password'
-								required={true}
-							/>
-							<Button type='primary'>Connection</Button>
-						</>,
-					),
-				}}
-			>
-			</Submitter>
+			<LoginSubmitter />
 		</>
 	)
 }
