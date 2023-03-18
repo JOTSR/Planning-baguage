@@ -43,3 +43,16 @@ export interface BeforeInstallPromptEvent extends Event {
 }
 
 export type HttpMethod = 'POST' | 'GET' | 'DELETE' | 'PUT'
+
+export type WebPushSub = {
+	endpoint: string
+	keys: {
+		p256dh: string
+		auth: string
+	}
+}
+
+export type WebPushAction = {
+	title: string
+	action: `${string}_${string}#${string}`
+}

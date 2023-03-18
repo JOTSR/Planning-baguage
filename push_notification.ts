@@ -1,6 +1,5 @@
 import * as webpush from 'https://esm.sh/web-push@3.5.0'
-import { Claim, Outing } from './types.ts'
-
+import { Claim, Outing, WebPushSub } from './types.ts'
 webpush.setVapidDetails(
 	Deno.env.get('VAPID_SUB')!,
 	Deno.env.get('VAPID_PUBLIC')!,
@@ -157,17 +156,4 @@ function sendNotification(
 	payload: NotificationOptions & { title: string },
 ) {
 	return webpush.sendNotification(subscription, JSON.stringify({ payload }))
-}
-
-export type WebPushSub = {
-	endpoint: string
-	keys: {
-		p256dh: string
-		auth: string
-	}
-}
-
-export type WebPushAction = {
-	title: string
-	action: `${string}_${string}#${string}`
 }

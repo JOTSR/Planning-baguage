@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-import { WebPushAction } from '../push_notification.ts'
+import { WebPushAction } from '../types.ts'
 import { appVersion } from './app_version.ts'
 
 //deno-lint-ignore no-var

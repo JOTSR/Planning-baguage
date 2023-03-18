@@ -1,4 +1,4 @@
-import { WebPushSub } from '../../push_notification.ts'
+import { WebPushSub } from '../../types.ts'
 import { RespondJson } from '../../utils.ts'
 import { WithSessionHandlers } from './login.ts'
 
