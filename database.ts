@@ -89,7 +89,7 @@ type RoutesHooks = {
 	}
 }
 
-type HookHandler<T extends Record<string, unknown> = never> = (
+export type HookHandler<T extends Record<string, unknown> = never> = (
 	req: Request,
 	ctx: HandlerContext<T & SessionData>,
 ) => void | Promise<void>
