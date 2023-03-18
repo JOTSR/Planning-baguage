@@ -116,6 +116,42 @@ export function sendOutingCancellationNotification(
 	})
 }
 
+export function sendOutingUpdateNotification(
+	subscription: WebPushSub,
+	oldOuting: Omit<Outing, 'uuid' | 'description'>,
+	newOuting: Omit<Outing, 'uuid'>,
+) {
+	const oldDate = new Date(oldOuting.startDate).getDate().toLocaleString()
+	const oldTime = new Date(oldOuting.startDate).getTime().toLocaleString()
+
+	const newDate = new Date(oldOuting.startDate).getDate().toLocaleString()
+	const newTime = new Date(oldOuting.startDate).getTime().toLocaleString()
+
+	return sendNotification(subscription, {
+		title: `Modification de la session de baguage du ${oldDate}`,
+		body:
+			`La session de baguage du ${oldDate} à ${oldTime} à "${oldOuting.location}" à été modifiée pour le ${newDate} à ${newTime} à "${newOuting.location}" (${newOuting.description})`,
+		tag: 'outing outing-update',
+		icon: '/assets/icons/calendar-star.svg',
+	})
+}
+
+export function sendOutingAddNotification(
+	subscription: WebPushSub,
+	{ startDate, location }: Omit<Outing, 'uuid'>,
+) {
+	const date = new Date(startDate).getDate().toLocaleString()
+	const time = new Date(startDate).getTime().toLocaleString()
+
+	return sendNotification(subscription, {
+		title: `Nouvelle session de baguage le ${date}`,
+		body:
+			`Nouvelle session de baguage le ${date} à ${time} à "${location}"`,
+		tag: 'outing outing-update',
+		icon: '/assets/icons/calendar-plus.svg',
+	})
+}
+
 function sendNotification(
 	subscription: WebPushSub,
 	payload: NotificationOptions & { title: string },
