@@ -1,11 +1,12 @@
 import { useState } from 'preact/hooks'
 import { Button } from '../components/Button.tsx'
 import { InputText } from '../components/InputText.tsx'
-import { Outing } from '../types.ts'
+import { Claim, Outing } from '../types.ts'
 import { handleSubmit } from './Submitter.tsx'
 import Toast from './Toast.tsx'
 import { hydrate } from 'preact'
 import { dateFormat } from '../utils.ts'
+import { registerSubscription } from '../routes/api/webpush.ts'
 
 export default function OutingsGallery(
 	{ outings, code }: { outings: Outing[]; code: string },
@@ -43,9 +44,9 @@ export default function OutingsGallery(
 			</div>
 			<br />
 			<form
-				method=''
+				method='POST'
 				className='form-panel'
-				action='/api/claim'
+				action='/api/db/claims'
 				onSubmit={confirmClaim}
 			>
 				<div className='outings-gallery-session'>
@@ -68,7 +69,7 @@ export default function OutingsGallery(
 				</div>
 				<input
 					type='hidden'
-					name='outing-uuid'
+					name='outing'
 					value={outings[displayed].uuid}
 				/>
 				<InputText
@@ -110,15 +111,30 @@ function loopValue(value: number, max: number): number {
 }
 
 async function confirmClaim(e: Event) {
-	const choice = confirm('Confimer la réservation')
-	if (!choice) e.preventDefault()
-	const response = await handleSubmit(e as unknown as SubmitEvent, {
-		reload: false,
-		type: 'FORM',
-	})
-	const { message } = await response.json()
-	hydrate(
-		<Toast type='success' message={message} />,
-		document.body,
-	)
+	try {
+		const choice = confirm('Confimer la réservation')
+		if (!choice) e.preventDefault()
+		const response = await handleSubmit(e as unknown as SubmitEvent, {
+			reload: false,
+			type: 'FORM',
+		})
+		const { data, message } = await response.json() as {
+			message: string
+			data: { entry: Claim }
+		}
+		await registerSubscription({
+			linkType: 'claim',
+			linkedTo: data.entry.uuid,
+		})
+
+		hydrate(
+			<Toast type='success' message={message} />,
+			document.body,
+		)
+	} catch (error) {
+		hydrate(
+			<Toast type='error' message={String(error)} />,
+			document.body,
+		)
+	}
 }
