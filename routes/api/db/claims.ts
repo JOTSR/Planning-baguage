@@ -3,8 +3,9 @@ import {
 	sendClaimRequestNotification,
 	sendClaimStatusNotification,
 } from '../../../push_notification.ts'
-import { Claim } from '../../../types.ts'
-import { ApiRules, getPatchFromBody } from '../../../utils.ts'
+import { Claim, Code } from '../../../types.ts'
+import { ApiRules, getPatchFromBody, RespondJson } from '../../../utils.ts'
+import { codesTable } from './codes.ts'
 import { outingsTable } from './outings.ts'
 import { subscriptionsTable } from './subscriptions.ts'
 import { usersTable } from './users.ts'
@@ -22,6 +23,7 @@ export const handler = restHandler(claimsTable, {
 	},
 	routesHooks: {
 		post: {
+			onReceive: checkCodeAndOuting,
 			onSuccess: notifyClaimAdding,
 		},
 		delete: {
@@ -33,6 +35,41 @@ export const handler = restHandler(claimsTable, {
 	},
 	tableKeys: ['uuid', 'email', 'lastname', 'firstname', 'outing', 'status'],
 })
+
+async function checkCodeAndOuting(req: Parameters<HookHandler>[0]) {
+	const { outing } = await getPatchFromBody<Claim, never>(
+		req.clone(),
+		'outing',
+	) as Claim
+	const { code } = await getPatchFromBody<Code, never>(
+		req.clone(),
+		'code',
+	) as Code
+
+	const isValidCode =
+		(await codesTable.readAll()).find((entry) => entry.code === code) !==
+			undefined
+	const isValidOuting =
+		(await outingsTable.readAll()).find((entry) =>
+			entry.uuid === outing
+		) !== undefined
+
+	if (!isValidCode) {
+		throw RespondJson({
+			data: {},
+			message: 'Code invalide',
+			status: 401,
+		})
+	}
+
+	if (!isValidOuting) {
+		throw RespondJson({
+			data: {},
+			message: 'Date sélectionnée innexistante',
+			status: 404,
+		})
+	}
+}
 
 async function notifyClaimAdding(req: Parameters<HookHandler>[0]) {
 	const { firstname, lastname, uuid, email, outing } = await getPatchFromBody<
