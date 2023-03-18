@@ -1,7 +1,7 @@
 import { WithSession } from 'fresh_session/mod.ts'
 import { HandlerContext } from 'https://deno.land/x/fresh@1.0.1/server.ts'
 import { ComponentChild, hydrate, render } from 'preact'
-import { Hash, ISOString, User } from './types.ts'
+import { Hash, HttpMethod, ISOString, User } from './types.ts'
 
 export async function hash(text: string): Promise<Hash> {
 	const digest = await crypto.subtle.digest(
@@ -19,6 +19,32 @@ export function RespondJson(
 		status: payload.status,
 		statusText: payload.message,
 	})
+}
+
+type RequestJsonArgs<T extends Record<string, unknown>, U extends HttpMethod> =
+	U extends 'GET' | 'DELETE' ? { method: U; data?: never }
+		: { method: U; data: T }
+
+export async function requestJson<
+	ResponseData extends Record<string, unknown>,
+	Data extends Record<string, unknown>,
+	Method extends HttpMethod,
+>(endpoint: string, { method, data }: RequestJsonArgs<Data, Method>) {
+	const response = await fetch(endpoint, {
+		method,
+		headers: {
+			'Content-type': 'application/json',
+		},
+		body: data !== undefined ? JSON.stringify({ data }) : null,
+	})
+	{
+		const { message, status, data } = await response.json() as {
+			message: string
+			status: number
+			data: ResponseData
+		}
+		return { message, status, data, _response: response }
+	}
 }
 
 export const dateFormat = new Intl.DateTimeFormat('fr-FR', {

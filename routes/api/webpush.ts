@@ -1,5 +1,5 @@
-import { WebPushSub } from '../../types.ts'
-import { RespondJson } from '../../utils.ts'
+import { Subscription, WebPushSub } from '../../types.ts'
+import { requestJson, RespondJson } from '../../utils.ts'
 import { WithSessionHandlers } from './login.ts'
 
 export const handler: WithSessionHandlers = {
@@ -42,4 +42,54 @@ export const handler: WithSessionHandlers = {
 			status: 404,
 		})
 	},
+}
+
+export async function getOrSubscribe(registration: ServiceWorkerRegistration) {
+	const subscription = await registration.pushManager.getSubscription()
+
+	if (subscription) return subscription
+
+	const { data, message, _response } = await requestJson('/api/webpush', {
+		method: 'GET',
+	})
+
+	if (!_response.ok) {
+		throw new Error(message)
+	}
+
+	const { pub } = data as { pub: string }
+
+	return registration.pushManager.subscribe({
+		userVisibleOnly: true,
+		applicationServerKey: pub,
+	})
+}
+
+export async function registerSubscription(
+	{ linkType, linkedTo }: Pick<Subscription, 'linkType' | 'linkedTo'>,
+) {
+	if ('serviceWorker' in navigator) {
+		try {
+			const registration = await navigator.serviceWorker.getRegistration()
+			if (registration === undefined) {
+				throw new Error('no service worker registration')
+			}
+			const webPushSub = JSON.parse(
+				JSON.stringify(await getOrSubscribe(registration)),
+			) as WebPushSub
+			const subscription: Omit<Subscription, 'ip' | 'uuid'> = {
+				linkType,
+				linkedTo,
+				webPushSub,
+			}
+
+			await requestJson('/api/db/subscriptions', {
+				method: 'POST',
+				data: subscription,
+			})
+		} catch (error) {
+			//registration failed
+			console.error(`Registration failed: ${error}`)
+		}
+	}
 }
