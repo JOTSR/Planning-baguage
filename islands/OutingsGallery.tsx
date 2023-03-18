@@ -112,7 +112,7 @@ function loopValue(value: number, max: number): number {
 async function confirmClaim(e: Event) {
 	const choice = confirm('Confimer la réservation')
 	if (!choice) e.preventDefault()
-	const response = await handleSubmit(e as unknown as SubmitEvent)
+	const response = await handleSubmit(e as unknown as SubmitEvent, { reload: false })
 	const { message } = await response.json()
 	hydrate(
 		<Toast type='success' message={message} />,
