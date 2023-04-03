@@ -24,6 +24,7 @@ export default function ClaimDialogButton(
 		<DialogSubmitter
 			title='Examiner les demandes'
 			action='/api/claims/handle'
+			method='GET'
 			id={id}
 			onClose={() =>
 				updateVue(setPendingClaims, setAcceptedClaims, setOutings)}
