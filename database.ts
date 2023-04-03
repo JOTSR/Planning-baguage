@@ -1,6 +1,6 @@
 import { HandlerContext } from '$fresh/server.ts'
 import { WithSession } from 'fresh_session/mod.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.10.0'
+import { createClient } from 'supabase'
 import { SessionData, WithSessionHandlers } from './routes/api/login.ts'
 import { HttpMethod, UUID } from './types.ts'
 import {
