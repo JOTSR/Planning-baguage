@@ -1,5 +1,5 @@
 import { IS_BROWSER } from '$fresh/runtime.ts'
-import { useState } from 'https://esm.sh/v107/preact@10.11.0/hooks/src/index'
+import { useState } from 'preact/hooks'
 import { Button } from '../components/Button.tsx'
 import { InputText } from '../components/InputText.tsx'
 import { Outing } from '../types.ts'
