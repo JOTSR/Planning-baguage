@@ -1,4 +1,3 @@
-import { hydrate } from 'preact'
 import { Button } from '../components/Button.tsx'
 import { appendJsx } from '../utils.ts'
 import Toast from './Toast.tsx'
@@ -28,8 +27,12 @@ async function share(shareData: ShareData) {
 			document.body,
 		)
 	}
+	//@ts-ignore navigator has userAgent
+	const message = (navigator.userAgent as string).includes('Firefox')
+		? 'Firefox ne supporte pas le partage rapide, essayez plutôt de copier le code'
+		: 'Impossible de partager le lien'
 	appendJsx(
-		<Toast type='error' message='Impossible de partager le lien' />,
+		<Toast type='error' message={message} />,
 		document.body,
 	)
 }
