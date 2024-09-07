@@ -51,26 +51,31 @@ export default function OutingsGallery(
 			>
 				<div className='outings-gallery-session'>
 					<p className='outings-gallery-session-date'>
-						{dateFormat.format(
-							new Date(outings?.[displayed]?.startDate),
-						)}
+						{outings[displayed]
+							? dateFormat.format(
+								new Date(outings[displayed].startDate),
+							)
+							: 'N.A'}
 					</p>
 					<p>
 						<small>
 							<i className='ti ti-map-pin'></i>{' '}
-							{outings[displayed].location}
+							{outings[displayed]
+								? outings[displayed].location
+								: 'N.A'}
 						</small>
 						<br />
 						<small>
-							<i className='ti ti-note'></i>{' '}
-							{outings[displayed].description}
+							<i className='ti ti-note'></i> {outings[displayed]
+								? outings[displayed].description
+								: 'N.A'}
 						</small>
 					</p>
 				</div>
 				<input
 					type='hidden'
 					name='outing'
-					value={outings[displayed].uuid}
+					value={outings[displayed] ? outings[displayed].uuid : 'N.A'}
 				/>
 				<InputText
 					title='Prénom'
