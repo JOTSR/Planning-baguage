@@ -11,6 +11,13 @@ import {
 } from './utils.ts'
 
 const { SUPABASE_KEY, SUPABASE_ENDPOINT } = Deno.env.toObject()
+const DEV = Deno.env.get('ENV') === 'DEV'
+if (DEV) {
+	console.log(
+		'%c=== Database running in dev mode ===',
+		'font-weight: bold; color: red; background-color: yellow',
+	)
+}
 
 export class DbTable<T extends { uuid: UUID }> {
 	#supabase = createClient(SUPABASE_ENDPOINT, SUPABASE_KEY)
@@ -20,16 +27,47 @@ export class DbTable<T extends { uuid: UUID }> {
 	}
 
 	async readAll(): Promise<T[]> {
+		if (DEV) {
+			console.log(
+				`%c> readAll on ${this.#tableName}`.padEnd(100, ' '),
+				'background-color: royalblue; color: white',
+			)
+			const data = sessionStorage.getItem(`mock-db-${this.#tableName}`)
+			if (data) {
+				// console.log(JSON.parse(data))
+				return JSON.parse(data)
+			}
+		}
+
 		const { data, error } = await this.#supabase.from(this.#tableName)
 			.select()
 
 		if (error) {
 			throw Error
 		}
+
+		if (DEV) {
+			// console.log(data)
+			sessionStorage.setItem(
+				`mock-db-${this.#tableName}`,
+				JSON.stringify(data),
+			)
+		}
+
 		return data
 	}
 
 	async read({ uuid }: Pick<T, 'uuid'>): Promise<T> {
+		if (DEV) {
+			console.log(
+				`%c> read on ${this.#tableName}`.padEnd(100, ' '),
+				'background-color: royalblue; color: white',
+			)
+			const datas = await this.readAll()
+			console.log(datas.filter((data) => data.uuid === uuid)[0])
+			return datas.filter((data) => data.uuid === uuid)[0]
+		}
+
 		const { data, error } = await this.#supabase.from(this.#tableName)
 			.select().eq('uuid', uuid)
 
@@ -43,6 +81,21 @@ export class DbTable<T extends { uuid: UUID }> {
 	async create(entry: Omit<T, 'uuid'>): Promise<T> {
 		const newEntry = { ...entry, uuid: crypto.randomUUID() } as T
 
+		if (DEV) {
+			console.log(
+				`%c> create on ${this.#tableName}`.padEnd(100, ' '),
+				'background-color: royalblue; color: white',
+			)
+			const datas = await this.readAll()
+			datas.push(newEntry)
+			sessionStorage.setItem(
+				`mock-db-${this.#tableName}`,
+				JSON.stringify(datas),
+			)
+			console.log(newEntry)
+			return newEntry
+		}
+
 		const { error } = await this.#supabase.from(this.#tableName).insert(
 			newEntry,
 		)
@@ -55,6 +108,27 @@ export class DbTable<T extends { uuid: UUID }> {
 	}
 
 	async update(newEntry: Partial<T> & Pick<T, 'uuid'>): Promise<T> {
+		if (DEV) {
+			console.log(
+				`%c> update on ${this.#tableName}`.padEnd(100, ' '),
+				'background-color: royalblue; color: white',
+			)
+			const datas = await this.readAll()
+
+			sessionStorage.setItem(
+				`mock-db-${this.#tableName}`,
+				JSON.stringify(
+					datas.map((data) =>
+						data.uuid === newEntry.uuid
+							? ({ ...data, ...newEntry })
+							: data
+					),
+				),
+			)
+			console.log(await this.read(newEntry))
+			return this.read(newEntry)
+		}
+
 		const { data, error } = await this.#supabase.from(this.#tableName)
 			.update(newEntry).eq('uuid', newEntry.uuid).select()
 
@@ -66,6 +140,24 @@ export class DbTable<T extends { uuid: UUID }> {
 	}
 
 	async delete(entry: Pick<T, 'uuid'>): Promise<T> {
+		if (DEV) {
+			console.log(
+				`%c> delete on ${this.#tableName}`.padEnd(100, ' '),
+				'background-color: royalblue; color: white',
+			)
+			const datas = await this.readAll()
+			const old = await this.read(entry)
+
+			sessionStorage.setItem(
+				`mock-db-${this.#tableName}`,
+				JSON.stringify(
+					datas.filter(({ uuid }) => uuid !== entry.uuid),
+				),
+			)
+			console.log(old)
+			return old
+		}
+
 		const { data, error } = await this.#supabase.from(this.#tableName)
 			.delete().eq('uuid', entry.uuid).select()
 
@@ -116,7 +208,7 @@ export function restHandler<
 		) {
 			try {
 				await routesHooks?.get?.onReceive?.(req, ctx)
-				await routesRules.get.execute<U & SessionData>(req, ctx)
+				await routesRules.get.execute<U & SessionData>(req.clone(), ctx)
 				const uuid = new URL(req.url).searchParams.get('uuid')
 
 				if (uuid) {
@@ -150,7 +242,7 @@ export function restHandler<
 		) {
 			try {
 				await routesHooks?.get?.onReceive?.(req, ctx)
-				await routesRules.put.execute<U & SessionData>(req, ctx)
+				await routesRules.put.execute<U & SessionData>(req.clone(), ctx)
 				const patch = await getPatchFromBody<T, 'uuid'>(
 					req,
 					...tableKeys,
@@ -172,16 +264,24 @@ export function restHandler<
 			ctx: HandlerContext<U & SessionData, WithSession>,
 		) {
 			try {
+				console.log('here')
 				await routesHooks?.get?.onReceive?.(req, ctx)
+				console.log('here21')
 				const keys = tableKeys.filter((key) =>
 					key !== 'uuid'
 				) as (keyof T)[]
-				await routesRules.post.execute<U & SessionData>(req, ctx)
+				console.log('here22')
+				await routesRules.post.execute<U & SessionData>(
+					req.clone(),
+					ctx,
+				)
+				console.log('here23')
 				const entry = await getPatchFromBody<T, typeof keys[number]>(
 					req,
 					...keys,
 				)
 
+				console.log('here2')
 				await routesHooks?.get?.onSuccess?.(req, ctx)
 				return RespondJson({
 					data: { entry: await entriesTable.create(entry) },
@@ -199,7 +299,10 @@ export function restHandler<
 		) {
 			try {
 				await routesHooks?.get?.onReceive?.(req, ctx)
-				await routesRules.delete.execute<U & SessionData>(req, ctx)
+				await routesRules.delete.execute<U & SessionData>(
+					req.clone(),
+					ctx,
+				)
 				const deleted = getPatchFromParams<T, 'uuid'>(req, 'uuid')
 
 				await routesHooks?.get?.onSuccess?.(req, ctx)

@@ -37,6 +37,7 @@ export const handler = restHandler(claimsTable, {
 })
 
 async function checkCodeAndOuting(req: Parameters<HookHandler>[0]) {
+	console.log('check')
 	const { outing } = await getPatchFromBody<Claim, never>(
 		req.clone(),
 		'outing',

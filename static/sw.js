@@ -1,2 +1,105 @@
-var c=Object.getOwnPropertySymbols;var p=Object.prototype.hasOwnProperty,d=Object.prototype.propertyIsEnumerable;var o=(t,s)=>{var i={};for(var e in t)p.call(t,e)&&s.indexOf(e)<0&&(i[e]=t[e]);if(t!=null&&c)for(var e of c(t))s.indexOf(e)<0&&d.call(t,e)&&(i[e]=t[e]);return i};var n="1.6.0";var r=`static-cache-v${n}`,l=`runtime-cache-v${n}`,h=["/","/account","/info","/invite","/style.css"],u=[/\/assets\//,/\/tabler-icons\//,/.*\.json/];self.addEventListener("install",t=>{t.waitUntil((async()=>{await(await caches.open(r)).addAll(h),self.skipWaiting()})())});self.addEventListener("activate",t=>{let s=[r,l];t.waitUntil((async()=>{let e=(await caches.keys()).filter(a=>!s.includes(a));await Promise.all(e.map(a=>caches.delete(a))),self.clients.claim()})())});self.addEventListener("fetch",t=>{let s=new URL(t.request.url);s.origin===self.location.origin&&(!u.some(i=>s.pathname.match(i))||t.respondWith((async()=>{let i=await caches.match(t.request),e=await caches.open(l);try{let a=await fetch(t.request);return await e.put(t.request,a.clone()),a}catch{if(i)return i}return new Response("Ressource indisponible",{status:503})})()))});self.addEventListener("notificationclick",t=>{let s=t.action,[i,e,a]=s.match(/(.+)_(.+)#(.+)/);i==="claim"&&((e==="accept"||e==="reject")&&self.clients.openWindow(`${self.location.hostname}/api/webpush_actions/claim?uuid=${a}&action=${e}`),e==="contact"&&self.clients.openWindow(`mailto:${a}`)),i==="calendar"&&e==="add"&&self.clients.openWindow(`${self.location.hostname}/api/webpush_actions/calendar?uuid=${a}`)});self.addEventListener("push",async t=>{if(Notification?.permission!=="granted")return;let e=t.data?.json(),{title:s}=e,i=o(e,["title"]);await m(s,i)});async function m(t,{icon:s,body:i,tag:e,actions:a}){if(!["denied","granted"].includes(Notification.permission))try{await Notification.requestPermission()}catch(f){return f}self.registration.showNotification(t,{lang:"fr",badge:"/assets/icons/logo-maskable-512.png",icon:s,body:i,actions:a,tag:e})}
+// static/app_version.ts
+var appVersion = "1.6.0";
+
+// static/sw.ts
+var STATIC_CACHE = `static-cache-v${appVersion}`;
+var RUNTIME_CACHE = `runtime-cache-v${appVersion}`;
+var PRECACHE_URLS = [
+  "/",
+  "/account",
+  "/info",
+  "/invite",
+  "/style.css"
+];
+var PATH_TO_CACHE = [
+  /\/assets\//,
+  /\/tabler-icons\//,
+  /.*\.json/
+];
+self.addEventListener("install", (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(STATIC_CACHE);
+    await cache.addAll(PRECACHE_URLS);
+    self.skipWaiting();
+  })());
+});
+self.addEventListener("activate", (event) => {
+  const currentCaches = [STATIC_CACHE, RUNTIME_CACHE];
+  event.waitUntil((async () => {
+    const cacheNames = await caches.keys();
+    const cachesToDelete = cacheNames.filter(
+      (cacheNames2) => !currentCaches.includes(cacheNames2)
+    );
+    await Promise.all(
+      cachesToDelete.map((cacheToDelete) => caches.delete(cacheToDelete))
+    );
+    self.clients.claim();
+  })());
+});
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin)
+    return;
+  if (!PATH_TO_CACHE.some((path) => url.pathname.match(path)))
+    return;
+  event.respondWith((async () => {
+    const cachedResponse = await caches.match(event.request);
+    const cache = await caches.open(RUNTIME_CACHE);
+    try {
+      const response = await fetch(event.request);
+      await cache.put(event.request, response.clone());
+      return response;
+    } catch {
+      if (cachedResponse)
+        return cachedResponse;
+    }
+    return new Response("Ressource indisponible", { status: 503 });
+  })());
+});
+self.addEventListener("notificationclick", (event) => {
+  const rawAction = event.action;
+  const [category, action, payload] = rawAction.match(/(.+)_(.+)#(.+)/);
+  if (category === "claim") {
+    if (action === "accept" || action === "reject") {
+      self.clients.openWindow(
+        `${self.location.hostname}/api/webpush_actions/claim?uuid=${payload}&action=${action}`
+      );
+    }
+    if (action === "contact") {
+      self.clients.openWindow(`mailto:${payload}`);
+    }
+  }
+  if (category === "calendar") {
+    if (action === "add") {
+      self.clients.openWindow(
+        `${self.location.hostname}/api/webpush_actions/calendar?uuid=${payload}`
+      );
+    }
+  }
+});
+self.addEventListener("push", async (event) => {
+  if (Notification?.permission !== "granted") {
+    return;
+  }
+  const { title, ...options } = event.data?.json();
+  await showNotification(title, options);
+});
+async function showNotification(title, { icon, body, tag, actions }) {
+  if (!["denied", "granted"].includes(Notification.permission)) {
+    try {
+      await Notification.requestPermission();
+    } catch (e) {
+      return e;
+    }
+  }
+  self.registration.showNotification(title, {
+    lang: "fr",
+    badge: "/assets/icons/logo-maskable-512.png",
+    icon,
+    body,
+    actions,
+    tag
+  });
+}
 //!cache strategy : network first
+//# sourceMappingURL=sw.js.map
