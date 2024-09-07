@@ -9,8 +9,8 @@ const link = `${endpoint}${code}`
 const qr = await qrcode(link) as unknown as string
 
 const shareData = {
-	title: 'Sortie nature',
-	text: `Lien d'invitation pour la sortie nature`,
+	title: 'Session de baguage',
+	text: `Lien d'invitation pour les sessions`,
 	url: link,
 }
 
