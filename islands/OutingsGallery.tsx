@@ -51,7 +51,7 @@ export default function OutingsGallery(
 				<div className='outings-gallery-session'>
 					<p className='outings-gallery-session-date'>
 						{dateFormat.format(
-							new Date(outings[displayed].startDate),
+							new Date(outings[displayed]?.startDate ?? 0),
 						)}
 					</p>
 					<p>
